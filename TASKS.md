@@ -86,14 +86,16 @@
 ### P1.1 Storage
 - [x] SQLite migrations
 - [x] demo SHA-256 dedupe
-- [ ] Parquet match artifacts
+- [x] Storage schema v2：`player_identities` / `controller_sessions` / `pawn_lives` / rounds+markers / event indexes
+- [x] `TickStore` port（dense ticks 不进 SQLite；Parquet/DuckDB 后续）
+- [ ] Parquet match artifacts（大规模实现）
 - [ ] DuckDB query layer
 
 ### P1.2 Normalize
-- [ ] Match/Player/Round/Event domain（schema 决策已写入 `docs/spikes/real-demo/SCHEMA_DECISIONS.md`）
-- [ ] stable internal IDs
+- [x] Match/Player/Round/Event domain（schema 决策已写入 `docs/spikes/real-demo/SCHEMA_DECISIONS.md`；storage v2 已落地）
+- [x] stable internal IDs（event_id / identity / session / pawn life）
 - [x] timing abstraction（调用方传入 tickrate，不写死 64）
-- [x] raw tick preserved（probe 同时保留 demo tick 与 server tick）
+- [x] raw tick preserved（probe 同时保留 demo tick 与 server tick；storage 双时钟列）
 
 ### P1.3 Timeline
 - [ ] match page

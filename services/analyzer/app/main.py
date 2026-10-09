@@ -21,8 +21,13 @@ from .security import make_token_verifier
 from .services.import_demo import ImportDemoService
 from .storage.db import Database
 from .storage.demo_repository import DemoRepository
+from .storage.event_repository import EventRepository
+from .storage.identity_repository import IdentityRepository
 from .storage.match_repository import MatchRepository
 from .storage.migrations import migrate
+from .storage.persist_parsed import PersistParsedDemoService
+from .storage.round_repository import RoundRepository
+from .storage.tick_store import JsonTickStore
 
 
 def create_app(
@@ -37,12 +42,20 @@ def create_app(
     migrate(database)
     demo_repo = DemoRepository(database)
     match_repo = MatchRepository(database)
+    tick_root = Path(settings.db_path).resolve().parent / "matches"
+    persist_parsed = PersistParsedDemoService(
+        IdentityRepository(database),
+        RoundRepository(database),
+        EventRepository(database),
+        tick_store=JsonTickStore(tick_root),
+    )
     parser = create_demo_parser()
     importer = ImportDemoService(
         demo_repo,
         match_repo,
         parser,
         extract_root=Path(settings.extract_root),
+        persist_parsed=persist_parsed,
     )
     verify = make_token_verifier(settings)
 

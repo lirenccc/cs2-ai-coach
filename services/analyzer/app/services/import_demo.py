@@ -9,7 +9,12 @@ from ..demo.models import ParsedDemo
 from ..demo.ports import DemoParserAdapter
 from ..errors import AppError
 from ..storage.demo_repository import DemoRecord, DemoRepository
+from ..storage.event_repository import EventRepository
+from ..storage.identity_repository import IdentityRepository
 from ..storage.match_repository import MatchRecord, MatchRepository
+from ..storage.persist_parsed import PersistParsedDemoService
+from ..storage.round_repository import RoundRepository
+from ..storage.tick_store import NullTickStore, TickStore
 
 
 @dataclass(frozen=True, slots=True)
@@ -29,11 +34,23 @@ class ImportDemoService:
         parser: DemoParserAdapter,
         *,
         extract_root: Path,
+        persist_parsed: PersistParsedDemoService | None = None,
+        tick_store: TickStore | None = None,
     ):
         self.demo_repository = demo_repository
         self.match_repository = match_repository
         self.parser = parser
         self.extract_root = Path(extract_root)
+        if persist_parsed is not None:
+            self.persist_parsed = persist_parsed
+        else:
+            database = demo_repository.database
+            self.persist_parsed = PersistParsedDemoService(
+                IdentityRepository(database),
+                RoundRepository(database),
+                EventRepository(database),
+                tick_store=tick_store or NullTickStore(),
+            )
 
     def execute(self, raw_path: str) -> ImportResult:
         resolved = resolve_demo_file(raw_path, extract_root=self.extract_root)
@@ -97,6 +114,9 @@ class ImportDemoService:
 
         try:
             parsed = self.parser.parse(resolved.demo_path)
+            # Indexes first so a failed write leaves the match pending/failed,
+            # not marked completed with missing identity/event rows.
+            self.persist_parsed.persist(match.id, parsed)
             saved = self.match_repository.save_parsed(match.id, parsed)
             return parsed, saved
         except AppError as exc:

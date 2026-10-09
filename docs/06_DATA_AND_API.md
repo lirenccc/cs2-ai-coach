@@ -49,12 +49,14 @@
 
 ## 3. SQLite 核心表
 
+Storage schema v2（migration `003_storage_v2.sql`）将身份拆成三层，并把规范化事件做成索引表。  
+**不要**把 dense player-tick 写入 SQLite；高密度 tick 走 `TickStore`（Parquet/DuckDB 预留）。
+
 ### demos
 - id
 - sha256 UNIQUE
 - original_path
-- managed_path
-- file_size
+- size_bytes
 - imported_at
 
 ### matches
@@ -63,27 +65,56 @@
 - map_name
 - parser_name
 - parser_version
-- schema_version
-- parse_status
+- normalization_schema_version
+- structural_probe_version
+- storage_schema_version
+- patch_version / build_num（源 build/patch，可空）
+- server_start_tick（可空；match 级 server 时钟参考）
+- parse_status / counts / parsed_json（兼容载荷）
 - created_at
 
-### match_players
+### player_identities
+- id
+- steamid64 UNIQUE（可空；bot 可不建 identity）
+- display_name_latest
+
+### controller_sessions
 - id
 - match_id
-- steam_id
-- account_id
-- nickname
-- team
-- is_focus_player
+- userid（demo-local controller）
+- player_identity_id?（FK，可空）
+- connected_demo_tick? / disconnected_demo_tick?
+- is_bot / is_hltv
+
+同一 Steam 玩家可有多个 `controller_sessions`；同一 userid 区间不假设整场唯一。
+
+### pawn_lives
+- id
+- match_id
+- controller_session_id?
+- pawn_handle
+- spawn_demo_tick? / death_demo_tick?
+
+不假设每回合每个 controller 只有一条 pawn life。
 
 ### rounds
 - id
 - match_id
 - round_no
-- start_tick
-- end_tick
-- winner
-- win_reason
+- freeze_end_demo_tick
+- end_demo_tick
+- end_marker_type（`round_officially_ended` | `cs_win_panel_match` | null）
+- winner / win_reason
+
+### round_markers
+原始 round 标记证据（可出现 freeze_end 多于 officially_ended）：
+- marker_type / demo_tick / server_tick? / sequence_index
+
+### kill_events / damage_events / grenade_events
+- `event_id` 为主键（稳定内部事件身份）
+- `demo_tick` + 可空 `server_tick`
+- `source_event_id` / `source_parser` 保留规范化来源身份
+- **禁止** `UNIQUE(match_id, round_id, player_id, event_type)` 一类约束（bot takeover 后同 controller 同回合可多次死亡）
 
 ### incidents
 - id
@@ -138,15 +169,22 @@
 
 ## 4. Migration
 
-SQLite 使用显式 migration：
+SQLite 使用显式 migration（`services/analyzer/migrations/`）：
 - `001_init.sql`
-- `002_add_capture_manifest.sql`
+- `002_match_parsed.sql`
+- `003_storage_v2.sql`
 
 规则：
 - 已发布 migration 不修改
 - 新变更只能增加 migration
-- app 启动时自动备份旧 DB
+- 通过 `schema_migrations` 表保证幂等
+- app 启动时自动备份旧 DB（后续加固）
 - migration fail 时不继续启动写入
+
+### TickStore port
+
+`TickStore`（`write_ticks` / `query` / `delete_match`）是 dense tick 的唯一写入边界。  
+初始实现可为 filesystem JSON；生产路径应落到 Parquet，并由 DuckDB 查询。Repository 只接受规范化 domain models，不接受 parser DataFrame。
 
 ## 5. Analyzer Local API
 

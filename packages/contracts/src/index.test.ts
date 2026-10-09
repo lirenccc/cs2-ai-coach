@@ -4,7 +4,10 @@ import {
   type AnalyzerHealth,
   type BootstrapInfo,
   type BridgeError,
+  type ControllerSession,
   type ImportDemoResponse,
+  type PawnLife,
+  type PlayerIdentity,
 } from "./index";
 
 describe("contracts bootstrap", () => {
@@ -49,5 +52,28 @@ describe("contracts bootstrap", () => {
     };
     expect(bridgeError.code).toBe("SIDECAR_CRASHED");
     expect(bridgeError.retryable).toBe(true);
+
+    const identity: PlayerIdentity = {
+      id: "pi-1",
+      steamid64: "76561198000000001",
+      displayNameLatest: "Alice",
+    };
+    const session: ControllerSession = {
+      id: "cs-1",
+      matchId: "match-1",
+      userid: 2,
+      playerIdentityId: identity.id,
+      isBot: false,
+      isHltv: false,
+    };
+    const life: PawnLife = {
+      id: "pl-1",
+      matchId: "match-1",
+      controllerSessionId: session.id,
+      pawnHandle: 501,
+      deathDemoTick: 40,
+    };
+    expect(session.playerIdentityId).toBe(identity.id);
+    expect(life.controllerSessionId).toBe(session.id);
   });
 });

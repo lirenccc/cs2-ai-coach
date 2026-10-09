@@ -74,3 +74,32 @@ export interface ImportDemoResponse {
   kill_count: number;
   damage_count: number;
 }
+
+/** Stable person identity (Steam when valid). Not a demo-local controller. */
+export interface PlayerIdentity {
+  id: string;
+  steamid64?: string | null;
+  displayNameLatest?: string | null;
+}
+
+/** Demo-local controller/userid interval. */
+export interface ControllerSession {
+  id: string;
+  matchId: string;
+  userid: number;
+  playerIdentityId?: string | null;
+  connectedDemoTick?: number | null;
+  disconnectedDemoTick?: number | null;
+  isBot: boolean;
+  isHltv: boolean;
+}
+
+/** One in-world pawn/life interval. */
+export interface PawnLife {
+  id: string;
+  matchId: string;
+  controllerSessionId?: string | null;
+  pawnHandle: number;
+  spawnDemoTick?: number | null;
+  deathDemoTick?: number | null;
+}
