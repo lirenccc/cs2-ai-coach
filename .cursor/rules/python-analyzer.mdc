@@ -1,0 +1,20 @@
+---
+description: Python analyzer conventions
+globs:
+  - "services/analyzer/**/*.py"
+alwaysApply: false
+---
+
+# Python analyzer
+
+- Target Python 3.12 unless the project explicitly upgrades after compatibility testing.
+- Use type hints.
+- Use Pydantic for API/domain boundary validation.
+- Use Polars for columnar event/tick processing where practical.
+- Use Parquet for high-volume tick data.
+- Use SQLite only for application metadata and indexes.
+- Keep FastAPI handlers thin; business logic lives in services/domain.
+- Do not expose Awpy or demoparser2 dataframe schemas through the HTTP API.
+- Every rule must be deterministic and unit tested.
+- Every AI response must pass JSON-schema/domain validation before persistence.
+- Log stable error codes, not only exception text.

@@ -1,0 +1,1 @@
+"""SQLite / Parquet / DuckDB persistence."""

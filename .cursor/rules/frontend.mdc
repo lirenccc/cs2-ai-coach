@@ -1,0 +1,19 @@
+---
+description: React and TypeScript UI conventions
+globs:
+  - "apps/desktop/src/**/*.ts"
+  - "apps/desktop/src/**/*.tsx"
+alwaysApply: false
+---
+
+# Frontend
+
+- UI consumes typed domain contracts.
+- Do not query SQLite directly.
+- Do not call the analyzer localhost server directly from the renderer.
+- Do not build raw CS2 console commands in the UI.
+- Do not calculate authoritative coaching rules in UI components.
+- Separate server/job state from ephemeral view state.
+- Render AI facts, observations, inferences, recommendations and uncertainties as distinct concepts.
+- Severity and confidence are different fields and must not be visually conflated.
+- Always show a clear failure/retry state for parse, CS2, capture and AI operations.

@@ -1,0 +1,20 @@
+---
+description: Core architectural and product constraints for the CS2 AI Coach project
+alwaysApply: true
+---
+
+# Core rules
+
+- Read `AGENTS.md` before architecture-affecting work.
+- This product is for offline CS2 demo review.
+- Never add DLL injection, game-memory reading/writing, binary patching, wallhack-like overlays, or live competitive assistance.
+- Demo-derived facts are authoritative; AI may explain but not invent facts.
+- Keep parser access behind `DemoParserAdapter`.
+- Keep CS2 console/replay access behind `Cs2ReplayAdapter`.
+- Keep capture behind `CaptureAdapter`.
+- Keep AI provider access behind `AiProvider`.
+- Renderer must not hold provider API keys or analyzer session secrets.
+- Long-running work must use persisted cancellable jobs.
+- Do not assume a fixed tick rate.
+- Every behavior change requires tests.
+- Do not bypass typed contracts with ad-hoc dictionaries unless the boundary is explicitly untyped.

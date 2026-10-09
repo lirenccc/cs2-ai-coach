@@ -1,0 +1,17 @@
+---
+description: Security, privacy and anti-cheat constraints
+alwaysApply: true
+---
+
+# Security
+
+- Never log API keys, Authorization headers or base64 image payloads.
+- Never store provider keys in browser localStorage/sessionStorage.
+- Treat Demo paths and player names as untrusted input.
+- Canonicalize and validate filesystem paths.
+- Use a random analyzer session token.
+- Bind analyzer only to loopback.
+- Treat CS2 NetCon as a sensitive local attack surface.
+- Do not expose a free-form console in production UI.
+- Do not implement live competitive information advantage.
+- Any feature requiring CS2 injection, memory access or anti-cheat bypass is out of scope.

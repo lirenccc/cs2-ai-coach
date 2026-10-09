@@ -1,0 +1,91 @@
+{
+  "normalization_schema_version": "2",
+  "parser_name": "demoparser2",
+  "parser_version": "0.42.0",
+  "header": {
+    "map_name": "de_dust2",
+    "patch_version": "14189",
+    "build_num": "10924",
+    "demo_version_name": "valve_demo_2",
+    "server_start_tick": 3779,
+    "tick_rate": 64.0,
+    "playback_ticks": 115418,
+    "playback_time_seconds": 1803.40625,
+    "timing_source": "structural_probe_file_info"
+  },
+  "roster": {
+    "human_count": 10,
+    "hltv_count": 1,
+    "teams": [
+      "CT",
+      "T"
+    ],
+    "userid_present_count": 11
+  },
+  "rounds": {
+    "count": 18,
+    "freeze_end_ticks": [
+      1181,
+      5661,
+      9330,
+      18915,
+      25326,
+      31605,
+      36503,
+      43510,
+      49894,
+      56467,
+      64263,
+      68735,
+      75147,
+      80855,
+      88090,
+      95529,
+      104105,
+      110792
+    ]
+  },
+  "events": {
+    "player_death": 128,
+    "player_hurt": 444,
+    "weapon_fire": 2894,
+    "round_freeze_end": 18,
+    "flashbang_detonate": 64,
+    "hegrenade_detonate": 18,
+    "smokegrenade_detonate": 56,
+    "inferno_startburn": 20,
+    "decoy_detonate": 7,
+    "grenade_total": 165
+  },
+  "kills": {
+    "count": 128,
+    "with_server_tick": 128,
+    "with_victim_userid": 128,
+    "with_victim_pawn": 128,
+    "demo_ticks_sample": [
+      2702,
+      2753,
+      3528,
+      4224,
+      4433
+    ],
+    "server_ticks_sample": [
+      6480,
+      6531,
+      7306,
+      8002,
+      8211
+    ]
+  },
+  "damages": {
+    "count": 444,
+    "with_server_tick": 444
+  },
+  "selected_ticks": {
+    "count": 180,
+    "unique_demo_ticks": 18,
+    "selection_reasons": [
+      "round_freeze_end"
+    ]
+  }
+}

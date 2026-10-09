@@ -1,0 +1,40 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #eaf0f6;
+  background: #0c1014;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button {
+  border: 1px solid #35414d; background: #1b2630; color: #f5f8fb;
+  border-radius: 10px; padding: 10px 14px; cursor: pointer;
+}
+button:hover { background: #23323e; }
+.shell { width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 56px 0 28px; }
+.hero { display: flex; justify-content: space-between; gap: 32px; align-items: flex-start; margin-bottom: 28px; }
+.hero h1 { font-size: clamp(34px, 5vw, 64px); max-width: 780px; line-height: 1.02; margin: 8px 0 18px; letter-spacing: -0.04em; }
+.hero p { color: #9eacb9; max-width: 720px; font-size: 17px; line-height: 1.7; }
+.eyebrow { color: #64d9b6; font-weight: 800; letter-spacing: .16em; font-size: 12px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.card { border: 1px solid #232e38; background: #111820; border-radius: 18px; padding: 22px; box-shadow: 0 18px 60px rgba(0,0,0,.20); }
+.cardTop { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.card h2 { margin: 0; font-size: 20px; }
+.pill { font-size: 11px; font-weight: 900; letter-spacing: .08em; border-radius: 999px; padding: 6px 9px; border: 1px solid; }
+.pill.ok { color: #83e4c3; border-color: #235c4c; background: #122e27; }
+.pill.bad { color: #f6af99; border-color: #6b382b; background: #321c18; }
+dl { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px 16px; margin: 22px 0 0; }
+dt { color: #748493; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.muted { color: #80909e; line-height: 1.6; overflow-wrap: anywhere; }
+.workflow { margin-top: 18px; }
+.workflow ol { list-style: none; padding: 0; margin: 26px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; counter-reset: steps; }
+.workflow li { counter-increment: steps; min-height: 130px; background: #0d141a; border: 1px solid #202c35; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.workflow li::before { content: "0" counter(steps); color: #64d9b6; font-weight: 900; letter-spacing: .1em; }
+.workflow span { color: #8393a0; line-height: 1.5; }
+footer { color: #64727f; font-size: 12px; text-align: center; padding: 28px 0 0; }
+@media (max-width: 800px) {
+  .hero { flex-direction: column; }
+  .grid { grid-template-columns: 1fr; }
+  .workflow ol { grid-template-columns: 1fr 1fr; }
+}

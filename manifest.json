@@ -1,0 +1,15 @@
+{
+  "name": "cs2-ai-coach",
+  "baseline_date": "2026-10-09",
+  "note": "Original design-pack file inventory was superseded when v0.2 real-demo code was integrated and reorganized. Use docs/README.md as the documentation map.",
+  "layout": {
+    "apps/desktop": "Tauri v2 + React + TypeScript",
+    "services/analyzer": "Python FastAPI sidecar",
+    "packages/contracts": "Shared types and JSON schemas",
+    "fixtures/real-demo": "Redacted golden summaries only (no .dem)",
+    "docs": "Numbered design docs, spikes, ops, prompts",
+    "scripts": "bootstrap / check / dev / probe / validate"
+  },
+  "doc_index": "docs/README.md",
+  "next_prompt": "docs/prompts/P0_2_FULL_PARSER.md"
+}

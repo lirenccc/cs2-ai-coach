@@ -1,0 +1,82 @@
+{
+  "header": {
+    "map_name": "de_dust2",
+    "patch_version": "14189",
+    "demo_version_name": "valve_demo_2",
+    "server_name": "fixture-server",
+    "client_name": "SourceTV Demo"
+  },
+  "players": [
+    {"name": "Alpha", "steamid": "76561198000000001", "team_number": 3},
+    {"name": "Bravo", "steamid": "76561198000000002", "team_number": 2}
+  ],
+  "round_freeze_end": [{"tick": 100}, {"tick": 200}],
+  "round_officially_ended": [{"tick": 180}],
+  "cs_win_panel_match": [{"tick": 260}],
+  "weapon_fire": [{"tick": 115, "user_steamid": "76561198000000002", "weapon": "ak47"}],
+  "flashbang_detonate": [
+    {
+      "tick": 130,
+      "user_name": "Bravo",
+      "user_steamid": "76561198000000002",
+      "x": 1.0,
+      "y": 2.0,
+      "z": 3.0,
+      "entityid": 9
+    }
+  ],
+  "hegrenade_detonate": [],
+  "smokegrenade_detonate": [],
+  "inferno_startburn": [],
+  "decoy_detonate": [],
+  "player_death": [
+    {
+      "tick": 120,
+      "user_name": "Alpha",
+      "user_steamid": "76561198000000001",
+      "attacker_name": "Bravo",
+      "attacker_steamid": "76561198000000002",
+      "weapon": "ak47",
+      "headshot": true,
+      "penetrated": 0,
+      "user_team_num": 3,
+      "attacker_team_num": 2
+    },
+    {
+      "tick": 220,
+      "user_name": "Bravo",
+      "user_steamid": "76561198000000002",
+      "attacker_name": "Alpha",
+      "attacker_steamid": "76561198000000001",
+      "weapon": "m4a1",
+      "headshot": false,
+      "penetrated": 1,
+      "user_team_num": 2,
+      "attacker_team_num": 3
+    }
+  ],
+  "player_hurt": [
+    {
+      "tick": 110,
+      "user_name": "Alpha",
+      "user_steamid": "76561198000000001",
+      "attacker_name": "Bravo",
+      "attacker_steamid": "76561198000000002",
+      "dmg_health": 27,
+      "dmg_armor": 4,
+      "weapon": "ak47",
+      "user_team_num": 3
+    },
+    {
+      "tick": 210,
+      "user_name": "Bravo",
+      "user_steamid": "76561198000000002",
+      "attacker_name": "Alpha",
+      "attacker_steamid": "76561198000000001",
+      "dmg_health": 54,
+      "dmg_armor": 0,
+      "weapon": "m4a1",
+      "user_team_num": 2
+    }
+  ]
+}

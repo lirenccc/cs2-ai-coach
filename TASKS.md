@@ -1,0 +1,204 @@
+# Implementation Backlog
+
+原则：严格按顺序。P0 没跑通，不进入 P1 大规模 UI。
+
+## P0 — Feasibility
+
+### P0.1 Repo bootstrap
+- [x] 初始化 Tauri v2 + React + TypeScript
+- [x] 初始化 Python 3.12 sidecar
+- [x] 建立 root `AGENTS.md`
+- [x] 安装 `.cursor/rules`
+- [x] 建立 CI：TS/Rust/Python lint + test
+- [x] 建立 runtime gitignore
+
+**Acceptance**
+- `pnpm test`
+- `cargo test`
+- `pytest`
+均有最小测试并通过。
+
+### P0.2 Demo parser spike
+- [x] 加 `demoparser2` adapter（可选 extra，未安装时返回不可用）
+- [x] 加 `awpy` adapter（Awpy 2.x，可选 extra）
+- [x] 做 `DemoParserAdapter`（`DemoParserPort` 别名保留）
+- [x] 组合策略：Awpy 优先，缺失/更稀的 kills 由 demoparser2 补齐
+- [x] 标准化输出 header / roster / rounds / kills / damages（无 DataFrame 泄漏）
+- [x] 导入时将 `ParsedDemo` 持久化到 `matches`（`parsed_json` + counts）
+- [x] 独立 PBDEMS2 structural probe（header / roster / legacy events）
+- [x] 脱敏 golden summary：`fixtures/real-demo/expected/9208210907649202700_0.redacted-summary.json`
+- [x] mocked fixture 单测（无网络、无真实 `.dem`）
+- [x] 可选真实 demo 交叉验证（`CS2_COACH_REAL_DEMO`）
+
+**Acceptance**
+- 同一 demo 重跑结果稳定
+- parser version 被记录
+- 无 demo 时测试用 mocked fixture
+
+### P0.3 Analyzer sidecar
+- [x] FastAPI `/v1/health`
+- [ ] Tauri spawn sidecar
+- [ ] random localhost port（dev 脚本目前固定 8765，token 已随机）
+- [x] session token
+- [ ] shutdown cleanup（`scripts/dev.ps1` 会停进程；打包生命周期未做）
+
+**Acceptance**
+- app 启动自动 sidecar ready
+- sidecar 崩溃后 UI 有明确错误
+
+### P0.4 NetCon spike
+- [ ] CS2 process detect
+- [ ] launch with `-netconport`
+- [x] TCP client（仅 loopback）
+- [x] command allowlist / `ReplayCommand`
+- [ ] load/pause/resume/seek capability test
+
+**Acceptance**
+- 测试 demo 可跳到至少 3 个预设 tick
+
+### P0.5 Capture spike
+- [ ] find CS2 window
+- [ ] Windows.Graphics.Capture proof
+- [ ] fallback strategy
+- [ ] single snapshot
+- [ ] burst snapshot
+
+**Acceptance**
+- 1920x1080 / windowed scenario 非黑图
+- resize 后恢复
+
+### P0.6 AI spike
+- [x] AI provider interface
+- [x] Responses API adapter（可选 `openai` extra）
+- [x] image input helper（data URL，不写日志）
+- [x] structured output schema
+- [x] local evidence / frame ID validation
+- [ ] 用 3 张真实测试图片打通 provider 调用
+
+**Acceptance**
+- 3 张测试图片 + fact packet 返回合法 schema
+- unsupported evidence id 被 validator 拒绝
+
+---
+
+## P1 — Offline Demo Coach
+
+### P1.1 Storage
+- [x] SQLite migrations
+- [x] demo SHA-256 dedupe
+- [ ] Parquet match artifacts
+- [ ] DuckDB query layer
+
+### P1.2 Normalize
+- [ ] Match/Player/Round/Event domain（schema 决策已写入 `docs/spikes/real-demo/SCHEMA_DECISIONS.md`）
+- [ ] stable internal IDs
+- [x] timing abstraction（调用方传入 tickrate，不写死 64）
+- [x] raw tick preserved（probe 同时保留 demo tick 与 server tick）
+
+### P1.3 Timeline
+- [ ] match page
+- [ ] round list
+- [ ] kill/death timeline
+- [ ] player selector
+- [ ] event detail drawer
+
+### P1.4 Rule Engine v1
+- [x] opening death
+- [x] untraded death
+- [ ] advantage throw candidate
+- [ ] isolated contact candidate
+- [ ] repeat peek candidate
+
+### P1.5 Incident UI
+- [ ] evidence list
+- [ ] severity/confidence separate
+- [ ] filter/sort
+- [ ] mark useful/not useful
+
+**P1 Exit**
+用户无需 AI，也能完成一场有价值的结构化复盘。
+
+---
+
+## P2 — CS2 Replay Integration
+
+### P2.1 Session manager
+- [ ] connect status
+- [ ] launch/restart UX
+- [ ] demo staging
+- [ ] cleanup
+
+### P2.2 Replay
+- [ ] load demo
+- [ ] seek with pre-roll
+- [ ] pause/resume
+- [ ] timescale
+- [ ] POV focus best effort
+
+### P2.3 Incident playback
+- [ ] “在 CS2 查看”
+- [ ] active incident state
+- [ ] next/previous incident
+- [ ] hotkeys
+
+**P2 Exit**
+从 Incident 点击到 CS2 正确时刻的成功率达到可用水平，并有失败恢复。
+
+---
+
+## P3 — Vision AI Coach
+
+### P3.1 Keyframe planner
+- [ ] per-incident frame roles
+- [ ] settle policy
+- [ ] frame quality check
+- [ ] capture manifest
+
+### P3.2 AI analysis
+- [ ] packet builder
+- [ ] prompt versioning
+- [ ] schema validation
+- [ ] retry/cancel
+- [ ] result cache
+
+### P3.3 Coach UI
+- [ ] summary
+- [ ] facts
+- [ ] observations
+- [ ] inferences
+- [ ] recommendations
+- [ ] uncertainties
+- [ ] frame gallery
+
+### P3.4 AI eval
+- [ ] 30~50 个内部标注 Incident
+- [ ] fact fidelity rubric
+- [ ] coaching usefulness rubric
+- [ ] regression report
+
+**P3 Exit**
+AI 不再是聊天框，而是可追溯 Incident 分析器。
+
+---
+
+## P4 — Longitudinal Coaching
+
+- [ ] cross-match player identity
+- [ ] opportunity-normalized metrics
+- [ ] recurring mistake clusters
+- [ ] map/side breakdown
+- [ ] weekly training priorities
+- [ ] improvement trend
+- [ ] coach feedback loop
+
+---
+
+## Deferred
+
+- [ ] cloud sync
+- [ ] team workspace
+- [ ] subscription/billing
+- [ ] auto demo download integrations
+- [ ] shareable web report
+- [ ] video clip export
+- [ ] voice coach

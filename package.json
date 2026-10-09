@@ -1,0 +1,18 @@
+{
+  "name": "cs2-ai-coach",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "pnpm --filter @cs2-ai-coach/desktop dev",
+    "build": "pnpm --filter @cs2-ai-coach/desktop build",
+    "test": "pnpm -r --if-present test",
+    "test:desktop": "pnpm --filter @cs2-ai-coach/desktop test",
+    "test:contracts": "pnpm --filter @cs2-ai-coach/contracts test",
+    "lint": "pnpm -r --if-present lint",
+    "tauri": "pnpm --filter @cs2-ai-coach/desktop tauri"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

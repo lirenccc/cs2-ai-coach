@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+.eggs/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Rust / Tauri
+**/target/
+apps/desktop/src-tauri/gen/
+apps/desktop/src-tauri/WixTools/
+
+# Runtime (local match data, captures, logs)
+runtime/**
+!runtime/.gitkeep
+services/analyzer/runtime/
+*.dem
+
+# IDE / OS
+.idea/
+.vscode/
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs / temp
+*.log
+tmp/
+temp/
+.cache/
+
+# Python tooling
+.python-version
+uv.lock

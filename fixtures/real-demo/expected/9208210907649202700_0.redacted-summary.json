@@ -1,0 +1,47 @@
+{
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "size_bytes": 76882362,
+  "header": {
+    "map_name": "de_dust2",
+    "patch_version": 14189,
+    "build_num": 10924,
+    "server_start_tick": 3779,
+    "demo_version_name": "valve_demo_2"
+  },
+  "playback": {
+    "seconds": 1803.40625,
+    "ticks": 115418,
+    "frames": 115419,
+    "verified_tick_rate": 64.0
+  },
+  "container": {
+    "outer_frames": 115484,
+    "packet_commands": 115419,
+    "full_packet_commands": 31
+  },
+  "roster": {
+    "human_count": 10,
+    "hltv_count": 1
+  },
+  "events": {
+    "registered_schemas": 271,
+    "legacy_events": 17432,
+    "unique_types": 47,
+    "round_freeze_end": 18,
+    "round_officially_ended": 17,
+    "player_death": 128,
+    "player_hurt": 444,
+    "weapon_fire": 2894,
+    "flashbang_detonate": 64,
+    "smokegrenade_detonate": 56,
+    "hegrenade_detonate": 18,
+    "bomb_planted": 10,
+    "bomb_exploded": 4,
+    "bomb_defused": 1,
+    "bot_takeover": 12
+  },
+  "tick_delta_histogram": {
+    "3778": 4002,
+    "3779": 13068
+  }
+}

@@ -1,0 +1,18 @@
+---
+description: Rust/Tauri native desktop integration rules
+globs:
+  - "apps/desktop/src-tauri/**/*.rs"
+alwaysApply: false
+---
+
+# Rust/Tauri native layer
+
+- Native code owns CS2 process management, NetCon, capture, sidecar lifecycle and secure OS integration.
+- Never use DLL injection or process-memory APIs for CS2.
+- Never construct shell commands from user-controlled strings.
+- Prefer typed process arguments.
+- Console commands must pass through an allowlist/typed command builder.
+- Add timeouts to network and child-process operations.
+- Capture failures must be recoverable.
+- Keep Tauri commands narrow and typed.
+- Do not move tactical/business rules into Rust.
