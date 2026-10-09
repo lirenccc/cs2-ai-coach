@@ -37,10 +37,10 @@
 
 ### P0.3 Analyzer sidecar
 - [x] FastAPI `/v1/health`
-- [ ] Tauri spawn sidecar
-- [ ] random localhost port（dev 脚本目前固定 8765，token 已随机）
-- [x] session token
-- [ ] shutdown cleanup（`scripts/dev.ps1` 会停进程；打包生命周期未做）
+- [x] Tauri spawn sidecar
+- [x] random localhost port
+- [x] session token（Tauri 生成，仅注入 sidecar；renderer 不可见）
+- [x] shutdown cleanup（`/v1/shutdown` + Exit 钩子；打包 binary 见 `docs/ops/SIDECAR_PACKAGING.md`）
 
 **Acceptance**
 - app 启动自动 sidecar ready

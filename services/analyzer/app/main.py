@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, Request
@@ -13,6 +14,7 @@ from .domain.models import (
     ImportDemoRequest,
     ImportDemoResponse,
     ParserHealth,
+    ShutdownResponse,
 )
 from .errors import AppError
 from .security import make_token_verifier
@@ -23,7 +25,11 @@ from .storage.match_repository import MatchRepository
 from .storage.migrations import migrate
 
 
-def create_app(settings: Settings | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    *,
+    on_shutdown_request: Callable[[], None] | None = None,
+) -> FastAPI:
     settings = settings or Settings()
     settings.ensure_loopback()
 
@@ -72,6 +78,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 version=parser.version(),
             ),
         )
+
+    @app.post(
+        "/v1/shutdown",
+        response_model=ShutdownResponse,
+        dependencies=[Depends(verify)],
+    )
+    async def shutdown() -> ShutdownResponse:
+        if on_shutdown_request is not None:
+            on_shutdown_request()
+        return ShutdownResponse()
 
     @app.post(
         "/v1/demos/import",

@@ -27,12 +27,24 @@ def main() -> None:
         db_path=args.db_path,
     )
     settings.ensure_loopback()
-    uvicorn.run(
-        create_app(settings),
+
+    server_holder: dict[str, uvicorn.Server | None] = {"server": None}
+
+    def request_shutdown() -> None:
+        server = server_holder["server"]
+        if server is not None:
+            server.should_exit = True
+
+    app = create_app(settings, on_shutdown_request=request_shutdown)
+    config = uvicorn.Config(
+        app,
         host=settings.analyzer_host,
         port=settings.analyzer_port,
         log_level="info",
     )
+    server = uvicorn.Server(config)
+    server_holder["server"] = server
+    server.run()
 
 
 if __name__ == "__main__":

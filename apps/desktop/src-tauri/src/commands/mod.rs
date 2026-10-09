@@ -3,8 +3,9 @@
 
 use crate::bootstrap::app_phase;
 use crate::cs2::replay::ReplayCommand;
-use crate::sidecar;
+use crate::sidecar::{self, BridgeError, SidecarManager, SidecarStatus};
 use serde::Serialize;
+use tauri::State;
 
 #[derive(Serialize)]
 pub struct DesktopHealth {
@@ -28,8 +29,15 @@ pub fn desktop_health() -> DesktopHealth {
 }
 
 #[tauri::command]
-pub async fn analyzer_health() -> Result<sidecar::AnalyzerHealth, String> {
-    sidecar::health().await.map_err(|e| e.to_string())
+pub async fn analyzer_health(
+    state: State<'_, SidecarManager>,
+) -> Result<sidecar::AnalyzerHealth, BridgeError> {
+    state.health().await
+}
+
+#[tauri::command]
+pub fn sidecar_status(state: State<'_, SidecarManager>) -> SidecarStatus {
+    state.status()
 }
 
 #[tauri::command]

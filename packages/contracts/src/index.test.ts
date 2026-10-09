@@ -3,6 +3,7 @@ import {
   CONTRACTS_SCHEMA_VERSION,
   type AnalyzerHealth,
   type BootstrapInfo,
+  type BridgeError,
   type ImportDemoResponse,
 } from "./index";
 
@@ -40,5 +41,13 @@ describe("contracts bootstrap", () => {
     expect(health.parser.name).toBe("demoparser2");
     expect(imported.deduplicated).toBe(false);
     expect(imported.match_id).toBe("match-1");
+
+    const bridgeError: BridgeError = {
+      code: "SIDECAR_CRASHED",
+      message: "analyzer sidecar process exited unexpectedly",
+      retryable: true,
+    };
+    expect(bridgeError.code).toBe("SIDECAR_CRASHED");
+    expect(bridgeError.retryable).toBe(true);
   });
 });

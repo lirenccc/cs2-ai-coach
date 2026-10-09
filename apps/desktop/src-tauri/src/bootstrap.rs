@@ -1,7 +1,7 @@
-//! Desktop bootstrap constants. No CS2 / capture / AI wiring in P0.1.
+//! Desktop bootstrap constants.
 
 pub fn app_phase() -> &'static str {
-    "P0.1"
+    "P0.3"
 }
 
 #[cfg(test)]
@@ -10,6 +10,6 @@ mod tests {
 
     #[test]
     fn phase_label_is_stable() {
-        assert_eq!(app_phase(), "P0.1");
+        assert_eq!(app_phase(), "P0.3");
     }
 }

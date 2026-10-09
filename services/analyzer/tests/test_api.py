@@ -44,6 +44,26 @@ def test_health_requires_token(tmp_path: Path):
         assert "version" in body["parser"]
 
 
+def test_shutdown_requires_token_and_invokes_callback(tmp_path: Path):
+    called: list[bool] = []
+
+    settings = Settings(
+        analyzer_host="127.0.0.1",
+        analyzer_port=8765,
+        session_token=TOKEN,
+        db_path=tmp_path / "api.db",
+        extract_root=tmp_path / "extracted",
+    )
+    app = create_app(settings, on_shutdown_request=lambda: called.append(True))
+    with TestClient(app) as client:
+        assert client.post("/v1/shutdown").status_code == 401
+        response = client.post("/v1/shutdown", headers=auth())
+        assert response.status_code == 200
+        assert response.json()["status"] == "shutting_down"
+
+    assert called == [True]
+
+
 def test_import_demo_and_dedupe(tmp_path: Path):
     demo = tmp_path / "比赛.dem"
     demo.write_bytes(b"fixture")

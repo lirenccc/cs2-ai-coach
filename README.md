@@ -42,8 +42,9 @@ cs2-ai-coach/
 - `AiProvider`、structured output、evidence / frame ID 校验
 - Rust `NetConClient` + 类型化 `ReplayCommand`
 - 桌面端经 Tauri command 查健康状态（renderer 不持有 token）
+- Tauri 托管 analyzer sidecar（随机 loopback 端口、会话 token、优雅关闭、bridge 错误码）
 
-尚未完成：Tauri 托管 sidecar 生命周期、真实 CS2 `-netconport` 冒烟、窗口捕获、demoparser2 完整标准化输出。下一步提示词：[`docs/prompts/P0_2_FULL_PARSER.md`](docs/prompts/P0_2_FULL_PARSER.md)。
+尚未完成：真实 CS2 `-netconport` 冒烟、窗口捕获、打包版 analyzer binary。见 [`TASKS.md`](TASKS.md)。
 
 ## 快速开始
 

@@ -1,10 +1,19 @@
 import { invoke } from "@tauri-apps/api/core";
-import type { AnalyzerHealth, DesktopHealth } from "./types";
+import { asBridgeError } from "./bridgeError";
+import type { AnalyzerHealth, DesktopHealth, SidecarStatus } from "./types";
 
 export async function getDesktopHealth(): Promise<DesktopHealth> {
   return invoke<DesktopHealth>("desktop_health");
 }
 
 export async function getAnalyzerHealth(): Promise<AnalyzerHealth> {
-  return invoke<AnalyzerHealth>("analyzer_health");
+  try {
+    return await invoke<AnalyzerHealth>("analyzer_health");
+  } catch (error) {
+    throw asBridgeError(error);
+  }
+}
+
+export async function getSidecarStatus(): Promise<SidecarStatus> {
+  return invoke<SidecarStatus>("sidecar_status");
 }

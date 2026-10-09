@@ -1,21 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
+import { asBridgeError, formatBridgeError } from "./bridgeError";
 import { getAnalyzerHealth, getDesktopHealth } from "./native";
 import { analyzerPill } from "./status";
-import type { AnalyzerHealth, DesktopHealth } from "./types";
+import type { AnalyzerHealth, BridgeError, DesktopHealth } from "./types";
 
 type State<T> =
   | { kind: "loading" }
   | { kind: "ready"; value: T }
-  | { kind: "error"; message: string };
+  | { kind: "error"; error: BridgeError };
 
 function StatusPill({ ok, text }: { ok: boolean; text: string }) {
   return <span className={`pill ${ok ? "ok" : "bad"}`}>{text}</span>;
 }
 
 export default function App() {
-  const [desktop, setDesktop] = useState<State<DesktopHealth>>({ kind: "loading" });
-  const [analyzer, setAnalyzer] = useState<State<AnalyzerHealth>>({ kind: "loading" });
+  const [desktop, setDesktop] = useState<State<DesktopHealth>>({
+    kind: "loading",
+  });
+  const [analyzer, setAnalyzer] = useState<State<AnalyzerHealth>>({
+    kind: "loading",
+  });
 
   async function refresh() {
     setDesktop({ kind: "loading" });
@@ -29,18 +34,33 @@ export default function App() {
     setDesktop(
       desktopResult.status === "fulfilled"
         ? { kind: "ready", value: desktopResult.value }
-        : { kind: "error", message: String(desktopResult.reason) },
+        : {
+            kind: "error",
+            error: {
+              code: "DESKTOP_BRIDGE",
+              message: String(desktopResult.reason),
+              retryable: true,
+            },
+          },
     );
 
     setAnalyzer(
       analyzerResult.status === "fulfilled"
         ? { kind: "ready", value: analyzerResult.value }
-        : { kind: "error", message: String(analyzerResult.reason) },
+        : { kind: "error", error: asBridgeError(analyzerResult.reason) },
     );
   }
 
   useEffect(() => {
     void refresh();
+    const timer = window.setInterval(() => {
+      void getAnalyzerHealth()
+        .then((value) => setAnalyzer({ kind: "ready", value }))
+        .catch((error) =>
+          setAnalyzer({ kind: "error", error: asBridgeError(error) }),
+        );
+    }, 5000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const analyzerOkay = useMemo(
@@ -72,7 +92,9 @@ export default function App() {
             <h2>Desktop bridge</h2>
             <StatusPill
               ok={desktop.kind === "ready"}
-              text={desktop.kind === "ready" ? "READY" : desktop.kind.toUpperCase()}
+              text={
+                desktop.kind === "ready" ? "READY" : desktop.kind.toUpperCase()
+              }
             />
           </div>
           {desktop.kind === "ready" ? (
@@ -86,7 +108,9 @@ export default function App() {
             </dl>
           ) : (
             <p className="muted">
-              {desktop.kind === "error" ? desktop.message : "Checking Tauri bridge…"}
+              {desktop.kind === "error"
+                ? formatBridgeError(desktop.error)
+                : "Checking Tauri bridge…"}
             </p>
           )}
         </article>
@@ -107,7 +131,9 @@ export default function App() {
             </dl>
           ) : (
             <p className="muted">
-              {analyzer.kind === "error" ? analyzer.message : "Checking analyzer…"}
+              {analyzer.kind === "error"
+                ? formatBridgeError(analyzer.error)
+                : "Checking analyzer…"}
             </p>
           )}
         </article>
@@ -137,7 +163,8 @@ export default function App() {
       </section>
 
       <footer>
-        Offline demo review only · No injection · No process-memory access · No live competitive assistance
+        Offline demo review only · No injection · No process-memory access · No
+        live competitive assistance
       </footer>
     </main>
   );

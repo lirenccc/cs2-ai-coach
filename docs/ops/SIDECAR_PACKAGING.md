@@ -1,9 +1,10 @@
 # Sidecar Packaging Plan
 
-Development starts the Python analyzer separately so the repository works
-before a packaged executable exists.
+Development: Tauri spawns `.venv` Python (`python -m app`) with a random
+loopback port and per-session token. Set `CS2_COACH_ANALYZER_PYTHON` /
+`CS2_COACH_DB_PATH` via `scripts/dev.ps1` if needed.
 
-P0.3 should switch production startup to a Tauri-managed external binary.
+Production: switch startup to a Tauri-managed external binary.
 
 Target:
 

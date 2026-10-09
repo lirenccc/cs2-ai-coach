@@ -28,6 +28,31 @@ export interface AnalyzerHealth {
   parser: ParserHealth;
 }
 
+/** Stable bridge errors returned by Tauri commands (never includes session token). */
+export type BridgeErrorCode =
+  | "SIDECAR_NOT_READY"
+  | "SIDECAR_START_TIMEOUT"
+  | "SIDECAR_CRASHED"
+  | "SIDECAR_UNAUTHORIZED"
+  | "SIDECAR_REQUEST_TIMEOUT"
+  | "SIDECAR_UNAVAILABLE"
+  | "SIDECAR_REQUEST_FAILED"
+  | "SIDECAR_CONFIG"
+  | "SIDECAR_SPAWN_FAILED";
+
+export interface BridgeError {
+  code: BridgeErrorCode | string;
+  message: string;
+  retryable: boolean;
+}
+
+export type SidecarStatus =
+  | "starting"
+  | "ready"
+  | "crashed"
+  | "stopped"
+  | "failed";
+
 export interface DesktopHealth {
   app: string;
   version: string;

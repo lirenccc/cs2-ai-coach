@@ -16,6 +16,10 @@ class HealthResponse(BaseModel):
     parser: ParserHealth
 
 
+class ShutdownResponse(BaseModel):
+    status: str = "shutting_down"
+
+
 class ImportDemoRequest(BaseModel):
     path: str = Field(min_length=1, max_length=32767)
 
