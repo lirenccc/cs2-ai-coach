@@ -308,6 +308,46 @@ impl ReplaySession {
         self.send_command(&cmd)
     }
 
+    /// Calibration-only seek: either raw clock candidate, no production domain gate.
+    pub fn go_to_tick_calibration_candidate(
+        &mut self,
+        tick: ReplayTick,
+    ) -> Result<NetConResponse, Cs2Error> {
+        let cmd = ReplayCommand::go_to_tick_calibration_candidate(tick);
+        self.send_command(&cmd)
+    }
+
+    /// Calibration seek with extended drain so intermittent engine skip lines are kept.
+    pub fn go_to_tick_calibration_candidate_drained(
+        &mut self,
+        tick: ReplayTick,
+    ) -> Result<NetConResponse, Cs2Error> {
+        self.ensure_connected()?;
+        let cmd = ReplayCommand::go_to_tick_calibration_candidate(tick);
+        let client = self.client.as_mut().expect("connected");
+        match client.command_then_drain(
+            &cmd,
+            Duration::from_millis(800),
+            Duration::from_millis(400),
+            Duration::from_secs(8),
+        ) {
+            Ok(resp) => Ok(resp),
+            Err(e) => {
+                self.mark_connection_lost(e.clone());
+                Err(e)
+            }
+        }
+    }
+
+    /// Calibration-only `demo_pauseatservertick` experiment.
+    pub fn pause_at_server_tick_calibration(
+        &mut self,
+        server_tick: u64,
+    ) -> Result<NetConResponse, Cs2Error> {
+        let cmd = ReplayCommand::pause_at_server_tick_calibration(server_tick);
+        self.send_command(&cmd)
+    }
+
     pub fn poll_health(&mut self) -> Result<(), Cs2Error> {
         if matches!(
             self.state,

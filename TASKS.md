@@ -75,13 +75,15 @@
 - CI 不要求本机安装 CS2
 
 ### P0.5A Replay tick calibration
-- [ ] 对比 parser `demo_tick` / `server_tick` 与 `demo_gototick` 实际落点
-- [ ] 明确引擎命令消费的时钟域
-- [ ] 固化 seek API 域约束与校准夹具
+- [x] 对比 parser `demo_tick` / `server_tick` 与 `demo_gototick` 实际落点
+- [x] 明确引擎命令消费的时钟域（本机验证：**DemoTick**）
+- [x] 固化 seek API 域约束与校准夹具
+- [x] 输出 `docs/spikes/replay/P0_5A_TICK_CALIBRATION.md` + redacted JSON
 
 **Acceptance**
-- 对私有 fixture 至少 3 个已知事件点可复现 seek
-- 文档写明权威时钟域，不再标记 UNVERIFIED
+- 对私有 fixture ≥5 个分布式事件锚点双侧候选实验完成
+- 权威时钟域已固化为 `ReplayTickDomain::DemoTick`（build-specific；见校准文档）
+- CI 不要求本机 CS2；真机入口为 ignored `probe_replay_tick_calibration`
 
 ### P0.6 Windows capture spike
 - [ ] find CS2 window

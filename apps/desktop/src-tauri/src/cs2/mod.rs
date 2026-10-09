@@ -5,6 +5,7 @@
 
 #![allow(dead_code)] // Adapter surface is exercised by unit/integration tests and upcoming UI.
 
+pub mod calibration;
 pub mod error;
 pub mod netcon;
 pub mod process;

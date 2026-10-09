@@ -57,7 +57,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn app_phase_is_p0_5() {
-        assert_eq!(commands::get_app_phase(), "P0.5");
+    fn app_phase_is_p0_5a() {
+        assert_eq!(commands::get_app_phase(), "P0.5A");
     }
 }

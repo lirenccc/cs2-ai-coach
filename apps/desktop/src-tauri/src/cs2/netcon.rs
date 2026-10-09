@@ -159,6 +159,20 @@ impl NetConClient {
         self.read_until_idle(Duration::from_millis(200), timeout)
     }
 
+    /// Calibration helper: send, wait for engine work, then drain with a longer idle.
+    /// Used to capture intermittent `Demo Skipping:` lines after `demo_gototick`.
+    pub fn command_then_drain(
+        &mut self,
+        command: &ReplayCommand,
+        work: Duration,
+        idle: Duration,
+        overall: Duration,
+    ) -> Result<NetConResponse, Cs2Error> {
+        self.send(command)?;
+        std::thread::sleep(work);
+        self.read_until_idle(idle, overall)
+    }
+
     pub fn disconnect(&mut self) {
         // Prefer a write-side shutdown first so the engine can finish draining.
         let _ = self.stream.shutdown(Shutdown::Write);

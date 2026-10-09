@@ -164,7 +164,7 @@ Conclusion: do **not** assume `-netconpassword` works until an explicit opt-in p
 
 **What tick domain does `demo_gototick` consume for this Demo / current CS2 build?**
 
-Do **not** guess. P0.2 proved `demo_tick` ≠ `server_tick` on the private fixture. Public API uses `ReplayTick { value, domain }`; `GoToTick` currently accepts only `DemoTick` as an **UNVERIFIED belief** and never translates clocks.
+**Resolved in P0.5A** for this build + fixture: **DemoTick** (engine “demo tick”; “game tick” aligns with parser `server_tick`). See `docs/spikes/replay/P0_5A_TICK_CALIBRATION.md`. Production `GoToTick` accepts only calibrated `DemoTick` and never translates clocks.
 
 ### Other unknowns
 

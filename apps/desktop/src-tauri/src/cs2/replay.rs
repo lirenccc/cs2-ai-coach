@@ -1,19 +1,23 @@
-use crate::cs2::tick::{ReplayTick, GOTO_TICK_DOMAIN_BELIEF_UNVERIFIED};
-
-#[cfg(test)]
-use crate::cs2::tick::ReplayTickDomain;
+use crate::cs2::tick::{
+    production_goto_tick_domain, production_goto_tick_is_calibrated, ReplaySeekPosition, ReplayTick,
+};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ReplayCommand {
     Pause,
     Resume,
     TogglePause,
-    /// UNVERIFIED: serializes to `demo_gototick <value>` using
-    /// [`GOTO_TICK_DOMAIN_BELIEF_UNVERIFIED`]. Do not treat as calibrated.
+    /// Serializes to `demo_gototick <value>`.
+    ///
+    /// Production builder [`ReplayCommand::go_to_tick`] accepts only the
+    /// calibrated domain ([`crate::cs2::tick::GOTO_TICK_DOMAIN_CALIBRATED`] =
+    /// DemoTick for the P0.5A-tested build). Never translates clocks.
     GoToTick(ReplayTick),
     Timescale(f32),
     DemoInfo,
     PlayStagedDemo(String),
+    /// Calibration-only experiment. Not a production seek dependency.
+    PauseAtServerTick(u64),
 }
 
 impl ReplayCommand {
@@ -30,16 +34,36 @@ impl ReplayCommand {
         Ok(Self::PlayStagedDemo(name))
     }
 
-    /// Build a seek command. Rejects naked-domain mismatch with the UNVERIFIED belief.
-    /// Never translates between demo/server ticks.
+    /// Production seek builder. Rejects domain mismatch with the calibrated
+    /// (or UNVERIFIED belief) engine domain. Never translates clocks.
     pub fn go_to_tick(tick: ReplayTick) -> Result<Self, String> {
-        if tick.domain != GOTO_TICK_DOMAIN_BELIEF_UNVERIFIED {
+        let accepted = production_goto_tick_domain();
+        if tick.domain != accepted {
+            let status = if production_goto_tick_is_calibrated() {
+                "calibrated"
+            } else {
+                "UNVERIFIED belief; see P0.5A"
+            };
             return Err(format!(
-                "GoToTick currently accepts only {:?} (UNVERIFIED engine domain; see P0.5A); got {:?}",
-                GOTO_TICK_DOMAIN_BELIEF_UNVERIFIED, tick.domain
+                "GoToTick accepts only {:?} ({status}); got {:?}",
+                accepted, tick.domain
             ));
         }
         Ok(Self::GoToTick(tick))
+    }
+
+    pub fn go_to_seek_position(pos: ReplaySeekPosition) -> Result<Self, String> {
+        Self::go_to_tick(pos.to_replay_tick())
+    }
+
+    /// Calibration-only: emit `demo_gototick` for either raw candidate domain.
+    /// Production callers must use [`Self::go_to_tick`].
+    pub fn go_to_tick_calibration_candidate(tick: ReplayTick) -> Self {
+        Self::GoToTick(tick)
+    }
+
+    pub fn pause_at_server_tick_calibration(server_tick: u64) -> Self {
+        Self::PauseAtServerTick(server_tick)
     }
 
     pub fn to_console_line(&self) -> String {
@@ -51,6 +75,7 @@ impl ReplayCommand {
             Self::Timescale(value) => format!("demo_timescale {value:.3}"),
             Self::DemoInfo => "demo_info".to_string(),
             Self::PlayStagedDemo(name) => format!("playdemo {name}"),
+            Self::PauseAtServerTick(tick) => format!("demo_pauseatservertick {tick}"),
         }
     }
 }
@@ -101,14 +126,30 @@ mod tests {
     }
 
     #[test]
-    fn go_to_tick_requires_unverified_demo_domain() {
+    fn go_to_tick_requires_calibrated_demo_domain() {
+        use crate::cs2::tick::ReplayTickDomain;
+        let accepted = production_goto_tick_domain();
+        assert_eq!(accepted, ReplayTickDomain::DemoTick);
+        assert!(production_goto_tick_is_calibrated());
         let cmd = ReplayCommand::go_to_tick(ReplayTick::demo(3779)).unwrap();
         assert_eq!(cmd.to_console_line(), "demo_gototick 3779");
         assert!(ReplayCommand::go_to_tick(ReplayTick::server(3779)).is_err());
-        assert_eq!(
-            GOTO_TICK_DOMAIN_BELIEF_UNVERIFIED,
-            ReplayTickDomain::DemoTick
-        );
+        // Naked u64 is not part of the public builder surface — only ReplayTick /
+        // ReplaySeekPosition. Calibration may still emit either candidate:
+        let cand = ReplayCommand::go_to_tick_calibration_candidate(ReplayTick::server(999));
+        assert_eq!(cand.to_console_line(), "demo_gototick 999");
+    }
+
+    #[test]
+    fn seek_position_api_rejects_other_domain() {
+        assert!(ReplayCommand::go_to_seek_position(ReplaySeekPosition::ServerTick(1)).is_err());
+        assert!(ReplayCommand::go_to_seek_position(ReplaySeekPosition::DemoTick(1)).is_ok());
+    }
+
+    #[test]
+    fn pause_at_server_tick_serializes() {
+        let cmd = ReplayCommand::pause_at_server_tick_calibration(46073);
+        assert_eq!(cmd.to_console_line(), "demo_pauseatservertick 46073");
     }
 
     #[test]
@@ -126,5 +167,11 @@ mod tests {
             ReplayCommand::TogglePause.to_console_line(),
             "demo_togglepause"
         );
+    }
+
+    #[test]
+    fn domains_enum_still_distinct() {
+        use crate::cs2::tick::ReplayTickDomain;
+        assert_ne!(ReplayTickDomain::DemoTick, ReplayTickDomain::ServerTick);
     }
 }

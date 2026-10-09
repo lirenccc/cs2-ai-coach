@@ -100,16 +100,19 @@ Cs2NetConClient
 demo_gototick 12345
 ```
 
-而是：
+而是通过显式时钟域的 typed API（P0.5A 已校准）：
 
 ```text
+ReplaySeekPosition::DemoTick(value)  // production demo_gototick domain
 seek_to_incident(incident_id)
 ```
 
+`demo_gototick` 在已测 CS2 build + 私有 fixture 上消费 **DemoTick**（引擎 “demo tick”）；parser `server_tick`（引擎 “game tick”）不得静默互换。详见 `docs/spikes/replay/P0_5A_TICK_CALIBRATION.md`。
+
 内部：
-1. 获取事件 tick
-2. 减去 pre-roll
-3. clamp 到 round start
+1. 获取事件的 DemoTick（非裸整数）
+2. 用 fixture 校验过的 tick-rate 减去 pre-roll
+3. clamp 到 round start（不跨上一回合）
 4. pause
 5. seek
 6. 等待 seek settle

@@ -1,0 +1,506 @@
+{
+  "replay_semantics_version": "p0.5a-2026-10-10",
+  "cs2_patch_version": "1.41.9.0",
+  "cs2_client_version": "2000930",
+  "steam_buildid": "25815307",
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "app_commit": null,
+  "calibration_timestamp_utc": "1791572058",
+  "decision": "demo_tick_authoritative",
+  "decision_error_code": null,
+  "anchors": [
+    {
+      "anchor_id": "A01_early_plant",
+      "demo_tick": 4354,
+      "server_tick": 8133,
+      "tests": [
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 4354,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Unable to write video config convar videocfg_dynamic_shadows  Scheduled config settings write (cl_crosshairstyle = 7)...  Scheduled config settings write (cl_crosshairdot = 0)...  Scheduled config settings write (cl_crosshair_t = 0)...  Sch"
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": "Unable to write video config convar videocfg_dynamic_shadows  Scheduled config settings write (cl_crosshairstyle = 7)...  Scheduled config settings write (cl_crosshairdot = 0)...  Scheduled config settings write (cl_crosshair_t = 0)...  Scheduled config settings write (cl_ironsight_usecrosshaircolor = 0)...  Scheduled config settings write (cl_crosshair_recoil = 0)...  Scheduled config settings write (cl_crosshair_friendly_warning = 1)...  Scheduled config settings write (cl_show_observer_crossh",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 4354,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 4354 (game tick 8133) from full packet 3840 (7619).  Current playback is 0 (3779)  Demo Skipping flushing last 515 messages, tick 4354 start 3840 goal 4354  CNetworkGameClientBase::OnReceivedUncompressed"
+          },
+          "replay_position": {
+            "engine_reported_tick": 4354,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 4354 (game tick 8133) from full packet 3840 (7619).  Current playback is 0 (3779)  Demo Skipping flushing last 515 messages, tick 4354 start 3840 goal 4354  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 28.5K non-incremental update from server  CGameEventManager::AddListener: event 'player_respawned' unknown.  Demo Skipping finished at tick 4354  CGameRules",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 0,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 8133,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 8133 (game tick 11912) from full packet 7680 (11459).  Current playback is 4531 (8310)  Demo Skipping flushing last 454 messages, tick 8133 start 7680 goal 8133  CSVCMsg_UserCommands_t: command 10423 for"
+          },
+          "replay_position": {
+            "engine_reported_tick": 8133,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 8133 (game tick 11912) from full packet 7680 (11459).  Current playback is 4531 (8310)  Demo Skipping flushing last 454 messages, tick 8133 start 7680 goal 8133  CSVCMsg_UserCommands_t: command 10423 for slot 3 follows command 6583  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 31.9K non-incremental update from server  CGameEventManager::AddListener: event ",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 3779,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 8133,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        }
+      ]
+    },
+    {
+      "anchor_id": "A03_near_bot_death",
+      "demo_tick": 34176,
+      "server_tick": 37954,
+      "tests": [
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 34176,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 34176 (game tick 37955) from full packet 30720 (34499).  Current playback is 8133 (11912)  Demo Skipping paused after 2500 messages, tick 33219 start 30720 goal 34176  CSVCMsg_UserCommands_t: command 334"
+          },
+          "replay_position": {
+            "engine_reported_tick": 34176,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 34176 (game tick 37955) from full packet 30720 (34499).  Current playback is 8133 (11912)  Demo Skipping paused after 2500 messages, tick 33219 start 30720 goal 34176  CSVCMsg_UserCommands_t: command 33460 for slot 3 follows command 10423  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 32.1K non-incremental update from server  CGameEventManager::AddListener:",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 0,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 34176,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 37954,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 37954 (game tick 41733) from full packet 34560 (38339).  Current playback is 34176 (37955)  Demo Skipping paused after 2500 messages, tick 37059 start 34560 goal 37954  CSVCMsg_UserCommands_t: command 37"
+          },
+          "replay_position": {
+            "engine_reported_tick": 37954,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 37954 (game tick 41733) from full packet 34560 (38339).  Current playback is 34176 (37955)  Demo Skipping paused after 2500 messages, tick 37059 start 34560 goal 37954  CSVCMsg_UserCommands_t: command 37300 for slot 3 follows command 33460  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 31.2K non-incremental update from server  CGameEventManager::AddListener",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 3778,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 37954,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        }
+      ]
+    },
+    {
+      "anchor_id": "A02_mid_defuse",
+      "demo_tick": 42294,
+      "server_tick": 46073,
+      "tests": [
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 42294,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 42294 (game tick 46073) from full packet 42240 (46019).  Current playback is 37954 (41733)  Demo Skipping flushing last 55 messages, tick 42294 start 42240 goal 42294  CSVCMsg_UserCommands_t: command 449"
+          },
+          "replay_position": {
+            "engine_reported_tick": 42294,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 42294 (game tick 46073) from full packet 42240 (46019).  Current playback is 37954 (41733)  Demo Skipping flushing last 55 messages, tick 42294 start 42240 goal 42294  CSVCMsg_UserCommands_t: command 44980 for slot 3 follows command 37300  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 30.9K non-incremental update from server  CGameEventManager::AddListener:",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 0,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 42294,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 46073,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping forward to demo tick 46073 (game tick 49852) from current 42294 (46073)  Demo Skipping paused after 2500 messages, tick 44798 start 42294 goal 46073  CGameEventManager::AddListener: event 'player_respawned' unknown. "
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": "Demo Skipping: skipping forward to demo tick 46073 (game tick 49852) from current 42294 (46073)  Demo Skipping paused after 2500 messages, tick 44798 start 42294 goal 46073  CGameEventManager::AddListener: event 'player_respawned' unknown.  stattrak_module([17117): MarkInterpolationLatchFlagsDirty:  C_BaseEntity::IsLatchedPermissible() == false  Error: Operator set_soundevent_block, EntryMatchList has no free slots!  Demo Skipping flushing last 1275 messages, tick 46073 start 44798 goal 46073  D",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 46073,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        }
+      ]
+    },
+    {
+      "anchor_id": "A06_mid_ak_hs",
+      "demo_tick": 47548,
+      "server_tick": 51326,
+      "tests": [
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 47548,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 47548 (game tick 51327) from full packet 46080 (49859).  Current playback is 46073 (49852)  Demo Skipping flushing last 1469 messages, tick 47548 start 46080 goal 47548  CSVCMsg_UserCommands_t: command 4"
+          },
+          "replay_position": {
+            "engine_reported_tick": 47548,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 47548 (game tick 51327) from full packet 46080 (49859).  Current playback is 46073 (49852)  Demo Skipping flushing last 1469 messages, tick 47548 start 46080 goal 47548  CSVCMsg_UserCommands_t: command 48819 for slot 3 follows command 44980  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 33.0K non-incremental update from server  CGameEventManager::AddListene",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 0,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 47548,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 51326,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 51326 (game tick 55105) from full packet 49920 (53699).  Current playback is 47548 (51327)  Demo Skipping flushing last 1407 messages, tick 51326 start 49920 goal 51326  CSVCMsg_UserCommands_t: command 5"
+          },
+          "replay_position": {
+            "engine_reported_tick": 51326,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 51326 (game tick 55105) from full packet 49920 (53699).  Current playback is 47548 (51327)  Demo Skipping flushing last 1407 messages, tick 51326 start 49920 goal 51326  CSVCMsg_UserCommands_t: command 52659 for slot 3 follows command 48819  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 33.2K non-incremental update from server  CGameEventManager::AddListene",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 3778,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 51326,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        }
+      ]
+    },
+    {
+      "anchor_id": "A04_post_halftime_explode",
+      "demo_tick": 79639,
+      "server_tick": 83418,
+      "tests": [
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 79639,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 79639 (game tick 83418) from full packet 76800 (80579).  Current playback is 51326 (55105)  Demo Skipping paused after 2500 messages, tick 79299 start 76800 goal 79639  CSVCMsg_UserCommands_t: command 79"
+          },
+          "replay_position": {
+            "engine_reported_tick": 79639,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 79639 (game tick 83418) from full packet 76800 (80579).  Current playback is 51326 (55105)  Demo Skipping paused after 2500 messages, tick 79299 start 76800 goal 79639  CSVCMsg_UserCommands_t: command 79537 for slot 3 follows command 52659  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 30.2K non-incremental update from server  CGameEventManager::AddListener",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 0,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 79639,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 83418,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 83418 (game tick 87197) from full packet 80640 (84419).  Current playback is 79639 (83418)  Demo Skipping paused after 2500 messages, tick 83139 start 80640 goal 83418  CSVCMsg_UserCommands_t: command 83"
+          },
+          "replay_position": {
+            "engine_reported_tick": 83418,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 83418 (game tick 87197) from full packet 80640 (84419).  Current playback is 79639 (83418)  Demo Skipping paused after 2500 messages, tick 83139 start 80640 goal 83418  CSVCMsg_UserCommands_t: command 83377 for slot 3 follows command 79537  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 32.2K non-incremental update from server  CGameEventManager::AddListener",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 3779,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 83418,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        }
+      ]
+    },
+    {
+      "anchor_id": "A05_late_death",
+      "demo_tick": 88430,
+      "server_tick": 92208,
+      "tests": [
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 88430,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 88430 (game tick 92209) from full packet 88320 (92099).  Current playback is 83418 (87197)  Demo Skipping flushing last 111 messages, tick 88430 start 88320 goal 88430  CSVCMsg_UserCommands_t: command 91"
+          },
+          "replay_position": {
+            "engine_reported_tick": 88430,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 88430 (game tick 92209) from full packet 88320 (92099).  Current playback is 83418 (87197)  Demo Skipping flushing last 111 messages, tick 88430 start 88320 goal 88430  CSVCMsg_UserCommands_t: command 91057 for slot 3 follows command 83377  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 33.6K non-incremental update from server  CGameEventManager::AddListener",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 0,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "demo_tick",
+          "candidate_value": 88430,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 92208,
+          "repeat": 1,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": "Demo Skipping: skipping to demo tick 92208 (game tick 95987) from full packet 92160 (95939).  Current playback is 88430 (92209)  Demo Skipping flushing last 49 messages, tick 92208 start 92160 goal 92208  CSVCMsg_UserCommands_t: command 948"
+          },
+          "replay_position": {
+            "engine_reported_tick": 92208,
+            "engine_reported_raw": "Demo Skipping: skipping to demo tick 92208 (game tick 95987) from full packet 92160 (95939).  Current playback is 88430 (92209)  Demo Skipping flushing last 49 messages, tick 92208 start 92160 goal 92208  CSVCMsg_UserCommands_t: command 94897 for slot 3 follows command 91057  CNetworkGameClientBase::OnReceivedUncompressedPacket(), received full update  Resetting prediction state because we received a full update  Receiving 32.6K non-incremental update from server  CGameEventManager::AddListener:",
+            "verification": null,
+            "verification_precision": "engine_reported",
+            "offset_ticks": 3778,
+            "settle_duration_ms": 2000
+          }
+        },
+        {
+          "candidate_domain": "server_tick",
+          "candidate_value": 92208,
+          "repeat": 2,
+          "command_delivery": {
+            "write_ok": true,
+            "raw_response_preview": ""
+          },
+          "replay_position": {
+            "engine_reported_tick": null,
+            "engine_reported_raw": " Demo contents for d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem:  DemoFileHeader: demo_file_stamp: \"PBDEMS2\\000\"  patch_version: 14189  server_name: \"\\345\\256\\214\\347\\276\\216\\344\\270\\226\\347\\225\\214\\347\\253\\236\\346\\212\\200\\345\\271\\263\\345\\217\\260\\345\\244\\251\\346\\242\\257\\346\\234\\215\\345\\212\\241\\345\\231\\250\"  client_name: \"SourceTV Demo\"  map_name: \"de_dust2\"  game_directory: \"/data/cs2-linux-server/cs2/game/csgo\"  fullpackets_version: 2  allow_clientside_entities: true  al",
+            "verification": null,
+            "verification_precision": "none",
+            "offset_ticks": null,
+            "settle_duration_ms": 2000
+          }
+        }
+      ]
+    }
+  ],
+  "pre_roll_trials": [
+    {
+      "anchor_id": "A02_mid_defuse",
+      "requested_pre_roll_seconds": 0.0,
+      "ticks_per_second": 64.0,
+      "round_start_demo_tick": 36503,
+      "anchor_replay_tick": 42294,
+      "pre_roll_replay_tick": 42294,
+      "clamped_to_round_start": false
+    },
+    {
+      "anchor_id": "A02_mid_defuse",
+      "requested_pre_roll_seconds": 2.0,
+      "ticks_per_second": 64.0,
+      "round_start_demo_tick": 36503,
+      "anchor_replay_tick": 42294,
+      "pre_roll_replay_tick": 42166,
+      "clamped_to_round_start": false
+    },
+    {
+      "anchor_id": "A02_mid_defuse",
+      "requested_pre_roll_seconds": 5.0,
+      "ticks_per_second": 64.0,
+      "round_start_demo_tick": 36503,
+      "anchor_replay_tick": 42294,
+      "pre_roll_replay_tick": 41974,
+      "clamped_to_round_start": false
+    }
+  ],
+  "demo_info_reliable": true,
+  "pause_at_server_tick": {
+    "command_accepted_write": true,
+    "reliable_pause_at_event": false,
+    "raw_response_preview": "Desired pause tick 46073 is not in the future.  The current tick is 95988.  Pausing playback immediately.  ",
+    "notes": "calibration-only; write accepted; engine refuses past server ticks (Desired pause tick is not in the future) and pauses immediately; not a production seek dependency"
+  },
+  "notes": [
+    "command_delivery.write_ok is not replay_position proof",
+    "replay_position from engine Demo Skipping lines (demo tick / game tick)",
+    "do not demo_gototick 0 under -tools (HostStateRequest / CopyNewEntity risk)",
+    "authoritative domain: DemoTick for this CS2 build + fixture only",
+    "staged_demo=d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec.dem"
+  ]
+}
