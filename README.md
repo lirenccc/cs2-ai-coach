@@ -40,11 +40,13 @@ cs2-ai-coach/
 - 独立 PBDEMS2 `structural_probe`
 - Opening death / untraded death 规则原语；timing 不写死 tickrate
 - `AiProvider`、structured output、evidence / frame ID 校验
-- Rust `NetConClient` + 类型化 `ReplayCommand`
-- 桌面端经 Tauri command 查健康状态（renderer 不持有 token）
+- Rust `NetConClient` + 类型化 `ReplayCommand` / `ReplayTick` 域
+- `Cs2ProcessManager`、`DemoStagingService`、replay session 状态机（P0.5）
+- 桌面端经 Tauri command 查健康状态（renderer 不持有 token / 无裸 console）
 - Tauri 托管 analyzer sidecar（随机 loopback 端口、会话 token、优雅关闭、bridge 错误码）
+- Storage schema v2（P0.4）
 
-尚未完成：真实 CS2 `-netconport` 冒烟、窗口捕获、打包版 analyzer binary。见 [`TASKS.md`](TASKS.md)。
+尚未完成：P0.5A tick 域校准、窗口捕获、打包版 analyzer binary。见 [`TASKS.md`](TASKS.md)。
 
 ## 快速开始
 

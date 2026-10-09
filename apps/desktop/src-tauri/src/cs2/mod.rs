@@ -1,5 +1,17 @@
-// Public adapter surface. Call sites arrive with the CS2 launch/capability spike.
-#[allow(dead_code)]
+//! CS2 process, NetCon, staging, and typed replay adapters.
+//!
+//! Safety: no DLL injection, no process-memory game APIs, no binary patching,
+//! no renderer-facing raw console.
+
+#![allow(dead_code)] // Adapter surface is exercised by unit/integration tests and upcoming UI.
+
+pub mod error;
 pub mod netcon;
-#[allow(dead_code)]
+pub mod process;
 pub mod replay;
+pub mod session;
+pub mod staging;
+pub mod tick;
+
+#[cfg(test)]
+mod integration;

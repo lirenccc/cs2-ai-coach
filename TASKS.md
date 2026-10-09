@@ -46,17 +46,44 @@
 - app 启动自动 sidecar ready
 - sidecar 崩溃后 UI 有明确错误
 
-### P0.4 NetCon spike
-- [ ] CS2 process detect
-- [ ] launch with `-netconport`
-- [x] TCP client（仅 loopback）
-- [x] command allowlist / `ReplayCommand`
-- [ ] load/pause/resume/seek capability test
+### P0.4 Storage v2
+- [x] SQLite migrations（storage schema v2）
+- [x] demo SHA-256 dedupe
+- [x] `player_identities` / `controller_sessions` / `pawn_lives` / rounds+markers / event indexes
+- [x] `TickStore` port（dense ticks 不进 SQLite；Parquet/DuckDB 后续）
+- [x] 双时钟列（`demo_tick` / `server_tick`）与 schema 决策对齐
 
 **Acceptance**
-- 测试 demo 可跳到至少 3 个预设 tick
+- 私有 P0.2 fixture 导入后 identity / session / pawn / event 行可查询
+- dense tick 不镜像进 SQLite
 
-### P0.5 Capture spike
+### P0.5 NetCon real-CS2 spike
+- [x] CS2 process detect / Steam detect
+- [x] launch with random high `-netconport` + Windows `-tools`（无 `-insecure`）
+- [x] TCP client（仅 loopback）
+- [x] command allowlist / `ReplayCommand`
+- [x] Demo staging（SHA-256 安全名、zip-slip 拒绝）
+- [x] typed tick domain（禁止裸 `seek(u64)`）
+- [x] session state machine（进程退出 / TCP 丢失可检测）
+- [x] load/pause/resume/timescale/`demo_info`/seek capability probe
+- [x] 输出 `docs/spikes/replay/P0_5_NETCON_STATUS.md`
+
+**Acceptance**
+- 真实 CS2 上可连接 NetCon
+- 私有 fixture 可 `playdemo` / pause / resume / timescale / seek 发令
+- `demo_gototick` 时钟域保持 UNVERIFIED（交给 P0.5A）
+- CI 不要求本机安装 CS2
+
+### P0.5A Replay tick calibration
+- [ ] 对比 parser `demo_tick` / `server_tick` 与 `demo_gototick` 实际落点
+- [ ] 明确引擎命令消费的时钟域
+- [ ] 固化 seek API 域约束与校准夹具
+
+**Acceptance**
+- 对私有 fixture 至少 3 个已知事件点可复现 seek
+- 文档写明权威时钟域，不再标记 UNVERIFIED
+
+### P0.6 Windows capture spike
 - [ ] find CS2 window
 - [ ] Windows.Graphics.Capture proof
 - [ ] fallback strategy
@@ -67,7 +94,7 @@
 - 1920x1080 / windowed scenario 非黑图
 - resize 后恢复
 
-### P0.6 AI spike
+### P0.7 AI spike
 - [x] AI provider interface
 - [x] Responses API adapter（可选 `openai` extra）
 - [x] image input helper（data URL，不写日志）

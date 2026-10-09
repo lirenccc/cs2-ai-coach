@@ -2316,17 +2316,22 @@ Cursor 可以写代码，但不能替代真实游戏环境确认：
 - app 启动自动 sidecar ready
 - sidecar 崩溃后 UI 有明确错误
 
-### P0.4 NetCon spike
+### P0.4 Storage v2
+- [x] SQLite storage schema v2 / dual tick clocks / TickStore port
+- See root `TASKS.md` for the canonical milestone list.
+
+### P0.5 NetCon real-CS2 spike
 - [ ] CS2 process detect
 - [ ] launch with `-netconport`
 - [ ] TCP client
 - [ ] command allowlist
 - [ ] load/pause/resume/seek capability test
+- Status artifact: `docs/spikes/replay/P0_5_NETCON_STATUS.md`
 
-**Acceptance**
-- 测试 demo 可跳到至少 3 个预设 tick
+### P0.5A Replay tick calibration
+- [ ] Determine whether `demo_gototick` consumes demo_tick or server_tick
 
-### P0.5 Capture spike
+### P0.6 Windows capture spike
 - [ ] find CS2 window
 - [ ] Windows.Graphics.Capture proof
 - [ ] fallback strategy
@@ -2337,7 +2342,7 @@ Cursor 可以写代码，但不能替代真实游戏环境确认：
 - 1920x1080 / windowed scenario 非黑图
 - resize 后恢复
 
-### P0.6 AI spike
+### P0.7 AI spike
 - [ ] AI provider interface
 - [ ] Responses API adapter
 - [ ] image input

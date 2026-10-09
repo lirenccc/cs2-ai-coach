@@ -1,0 +1,5 @@
+ResetBreakpadAppId: Universe is 1 (k_EUniversePublic)
+ResetBreakpadAppId: Setting non standard break pad app id: 2347779
+CSteam3Client::Activate succeeded.
+SteamID is [U:1:<STEAMID3>] (<STEAMID64>), AppID is 730
+Steam text filtering…

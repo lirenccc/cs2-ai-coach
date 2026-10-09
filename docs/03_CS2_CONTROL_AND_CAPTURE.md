@@ -29,16 +29,21 @@ Valve 的 Trusted Mode 明确限制第三方程序向 CS2 进程注入，因此�
 示意：
 
 ```text
-steam.exe -applaunch 730 -netconport <ephemeral-port>
+steam.exe -applaunch 730 -netconport <ephemeral-port> -tools
 ```
+
+Windows：当前 CS2 客户端在未带 `-tools` 时，`-netconport` 可能因过早 `socket()`（`WSANOTINITIALISED`）而无法监听；见 Valve issue `csgo-osx-linux#3603`。`-tools` 是 Workshop Tools 路径，不是注入 / `-insecure`。若缺少 `assetsystem.dll`（`ToolFramework2_002` 依赖），会以 Win32 error 126 启动失败；此时应**不要**强制 `-tools`，先从 Steam 正常启动游戏，并修复 Workshop Tools 组件后再做 NetCon。
 
 注意：
 - Valve 文档说明 `-netconport <number>` 创建可远程访问的 server console。
 - 因此应把它视为本机攻击面。
-- 端口随机化。
-- 只在分析会话期间开启。
-- Windows 防火墙策略建议阻断外部网络访问。
-- 不把端口/token上传日志。
+- 端口随机化（高位/ephemeral），会话生命周期尽量短。
+- 只在分析会话期间开启；桌面退出时释放 NetCon 会话。
+- Windows 防火墙策略建议阻断外部入站访问该端口（生产路径）。
+- 不把端口 / password / token 写到普通日志级别。
+- 不在正常产品路径使用 `-insecure`；不削弱 Trusted Mode / VAC。
+- `-netconpassword`：当前构建是否支持需能力探测核实；未核实前不得假定（见 `docs/spikes/replay/P0_5_NETCON_STATUS.md`）。
+- Renderer 不得提供任意 console 输入；命令必须走 typed allowlist。
 
 ## 3. NetCon Client
 

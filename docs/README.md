@@ -28,6 +28,10 @@ Also:
 | [spikes/real-demo/P0_2_REPORT.md](spikes/real-demo/P0_2_REPORT.md) | Independent PBDEMS2 probe of the private fixture |
 | [spikes/real-demo/SCHEMA_DECISIONS.md](spikes/real-demo/SCHEMA_DECISIONS.md) | Identity / tick / round schema decisions from that fixture |
 | [spikes/real-demo/VALIDATION.md](spikes/real-demo/VALIDATION.md) | v0.2 scaffold validation notes |
+| [spikes/replay/P0_5_NETCON_STATUS.md](spikes/replay/P0_5_NETCON_STATUS.md) | Real-CS2 NetCon feasibility spike status |
+| [spikes/replay/fixtures/](spikes/replay/fixtures/) | Redacted NetCon console excerpts |
+
+Milestone numbering (current): **P0.4 Storage v2** (complete) → **P0.5 NetCon** → **P0.5A tick calibration** → **P0.6 Windows capture**.
 
 Private `.dem` files are never committed. Golden redacted summary lives under `fixtures/real-demo/expected/`.
 
