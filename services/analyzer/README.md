@@ -46,8 +46,18 @@ python -m pip install -e ".\services\analyzer[dev,ai,demo]"
 
 Session token header: `x-cs2-coach-token`. Bind is loopback-only.
 
+## AI provider (P0.7)
+
+- Port: `AiProvider` (`app/ai/provider.py`)
+- OpenAI adapter: `OpenAiProvider` — Responses API `responses.parse`, `store=false`, versioned prompts under `app/ai/prompts/`
+- Post-validation: `validate_analysis_result` (schema + evidence_id + frame_id)
+- Credentials: analyzer/backend only via `CS2_COACH_OPENAI_API_KEY` (optional `OPENAI_API_KEY` fallback). Never in the renderer.
+- Real smoke (opt-in, not CI): see `docs/spikes/ai/P0_7_REAL_PROVIDER_SMOKE.md`
+
 ## Related docs
 
 - `docs/02_DEMO_PIPELINE.md`
+- `docs/05_AI_PIPELINE.md`
 - `docs/spikes/real-demo/`
+- `docs/spikes/ai/P0_7_REAL_PROVIDER_SMOKE.md`
 - `docs/ops/SIDECAR_PACKAGING.md`

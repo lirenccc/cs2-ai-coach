@@ -1,0 +1,47 @@
+{
+  "ai_contract_version": "p0.7-2026-10-10",
+  "evidence_ids": [
+    "ev-smoke-a04-bomb-exploded"
+  ],
+  "frame_ids": [
+    "frame-smoke-a04-0008"
+  ],
+  "frame_sha256s": [
+    "e0370b197addc71af40527b54cb2670748c9659971f3bed295e30723299824fa"
+  ],
+  "image_detail": "auto",
+  "incident_type": "PROVIDER_SMOKE_TEST",
+  "latency_ms": 209790,
+  "milestone": "P0.7",
+  "model_configured": "gpt-6.1-sol",
+  "model_family": "openai",
+  "notes": [
+    "Private screenshot bytes are not stored.",
+    "Player names / Steam IDs are not included.",
+    "Absolute paths are not included."
+  ],
+  "prompt_version": "provider_smoke_v001",
+  "provider": "openai",
+  "request_fingerprint": "9d73134b78a5563c30d34722de45de887180a89b1ac4d9afaf177ecc8f46b793",
+  "result": {
+    "confidence": 0.99,
+    "fact_evidence_ids": [
+      "ev-smoke-a04-bomb-exploded"
+    ],
+    "facts_count": 1,
+    "incident_id": "inc-provider-smoke-a04",
+    "inferences_count": 0,
+    "observation_frame_ids": [
+      "frame-smoke-a04-0008"
+    ],
+    "observations_count": 1,
+    "recommendations_count": 0,
+    "severity": 1,
+    "summary_redacted": "<redacted summary length=199>",
+    "uncertainties_count": 4
+  },
+  "schema_version": "coach_incident_analysis.v1",
+  "sdk_version": "2.54.0",
+  "store": false,
+  "validation_ok": true
+}

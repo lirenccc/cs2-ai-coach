@@ -117,15 +117,21 @@
 
 ### P0.7 AI spike
 - [x] AI provider interface
-- [x] Responses API adapter（可选 `openai` extra）
-- [x] image input helper（data URL，不写日志）
-- [x] structured output schema
-- [x] local evidence / frame ID validation
-- [ ] 用 3 张真实测试图片打通 provider 调用
+- [x] Responses API adapter（可选 `openai` extra；`store=false`；Structured Outputs；可选 `base_url` 中转）
+- [x] image input helper（data URL + 显式 `detail`；不写日志/不落盘私图）
+- [x] structured output schema + versioned prompt（`provider_smoke_v001`）
+- [x] local evidence / frame ID post-validation
+- [x] request fingerprint（确定性；排除 secrets/绝对路径）
+- [x] typed provider failure mapping（auth/timeout/429/5xx/refusal/incomplete）
+- [x] CI-safe unit tests + opt-in real smoke gate
+- [x] 真实 P0.6 frame + structured evidence → OpenAI-compatible Responses smoke（`gpt-6.1-sol` / `store=false`）
+- [x] redacted fixture + `docs/spikes/ai/P0_7_REAL_PROVIDER_SMOKE.md`
 
 **Acceptance**
-- 3 张测试图片 + fact packet 返回合法 schema
-- unsupported evidence id 被 validator 拒绝
+- 已知 structured evidence + ≥1 张真实 P0.6 frame → Responses Structured Output → schema + evidence/frame 校验通过
+- unsupported evidence/frame id 被 validator 拒绝
+- 真实调用保持 opt-in；正常 CI 不花费 API
+- 详见 `docs/spikes/ai/P0_7_REAL_PROVIDER_SMOKE.md`
 
 ---
 

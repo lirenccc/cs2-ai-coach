@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Protocol
 
 from .models import CoachIncidentAnalysis
+from .request import IncidentAnalysisRequest
 
 
 class AiProvider(Protocol):
@@ -13,4 +14,11 @@ class AiProvider(Protocol):
         incident_id: str,
         fact_packet_json: str,
         image_paths: list[Path],
+    ) -> CoachIncidentAnalysis: ...
+
+    def analyze_request(
+        self,
+        request: IncidentAnalysisRequest,
+        *,
+        post_validate: bool = True,
     ) -> CoachIncidentAnalysis: ...
