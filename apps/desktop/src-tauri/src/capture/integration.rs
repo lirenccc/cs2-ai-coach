@@ -414,6 +414,90 @@ fn probe_capture_after_calibrated_seek() {
 }
 
 #[test]
+#[ignore = "P0.6A capture-at-event semantic validation; launches CS2; not for CI"]
+fn probe_capture_at_event_semantics() {
+    let demo = real_demo_path().expect("set CS2_COACH_REAL_DEMO");
+    let mut session = ReplaySession::new(staging_root());
+    let _port = session.start_launch().expect("launch");
+    session.connect().expect("connect");
+    let (_staged, _) = session.stage_and_play_demo(&demo).expect("playdemo");
+    std::thread::sleep(Duration::from_secs(8));
+    session.pause().expect("pause");
+
+    let (patch, client, buildid) = read_steam_inf();
+    let patch = patch.expect("patch");
+    let client = client.expect("client");
+    let buildid = buildid.unwrap_or_else(|| "unknown".into());
+
+    let mut adapter = NativeCaptureAdapter::new(runtime_root());
+    adapter.set_cs2_build_meta(
+        Some(patch.clone()),
+        Some(client.clone()),
+        Some(buildid.clone()),
+    );
+
+    let anchors = [
+        ("A01_early_plant", 4354u64, 1u32),
+        ("A02_mid_defuse", 42294, 7),
+        ("A04_post_halftime_explode", 79639, 13),
+    ];
+    for (event_id, demo_tick, round_id) in anchors {
+        let mut ctx = ReplayCaptureContext::from_demo_tick(demo_tick).unwrap();
+        ctx = ctx.with_ids("9208210907649202700_0", event_id);
+        ctx.require_calibrated_build(&patch, &client, &buildid)
+            .expect("calibration build match");
+        assert_eq!(
+            ctx.require_calibrated_build(&patch, "0", &buildid)
+                .unwrap_err(),
+            "REPLAY_CALIBRATION_BUILD_MISMATCH"
+        );
+        session
+            .send_command(
+                &ReplayCommand::go_to_seek_position(ReplaySeekPosition::DemoTick(demo_tick))
+                    .unwrap(),
+            )
+            .expect("seek");
+        std::thread::sleep(SettlePolicy::fixed_ms(2000).duration());
+        adapter.set_replay_context(ctx).unwrap();
+        let target = discover_running_cs2_window().expect("window");
+        adapter.close();
+        adapter.open(&target).expect("open");
+        let frame = adapter
+            .capture_frame(&CaptureFrameRequest {
+                timeout: Duration::from_secs(5),
+                persist: true,
+                replay_paused: true,
+                previous_content_sha256: None,
+            })
+            .expect("frame");
+        let manifest = adapter.manifests().last().unwrap();
+        println!(
+            "semantic[{event_id}] round={round_id} tick={demo_tick} hash={} manifest_tick={:?} calib={}",
+            frame.content_sha256,
+            manifest.requested_demo_tick,
+            manifest.replay_semantics_version.as_deref().unwrap_or("?")
+        );
+        assert_eq!(manifest.requested_demo_tick, Some(demo_tick));
+        assert_eq!(
+            manifest.replay_semantics_version.as_deref(),
+            Some(REPLAY_SEMANTICS_VERSION)
+        );
+        assert!(frame.quality.valid);
+        let again = adapter
+            .capture_frame(&CaptureFrameRequest {
+                timeout: Duration::from_secs(5),
+                persist: false,
+                replay_paused: true,
+                previous_content_sha256: Some(frame.content_sha256.clone()),
+            })
+            .expect("paused duplicate allowed");
+        assert!(again.quality.duplicate_expected_while_paused || again.quality.valid);
+    }
+    adapter.close();
+    session.close();
+}
+
+#[test]
 #[ignore = "requires running CS2; verifies cleanup releases session"]
 fn probe_capture_cleanup_releases_resources() {
     let target = discover_running_cs2_window().expect("CS2 window");

@@ -1,4 +1,4 @@
-//! Windows capture adapters (P0.6).
+//! Windows capture adapters (P0.6) + evidence contracts (P0.6A).
 //!
 //! Offline Demo replay capture only. No live-match automation, injection,
 //! process-memory access, or renderer-facing raw HWND/D3D privileges.
@@ -9,6 +9,9 @@ pub mod adapter;
 pub mod backend;
 pub mod discover;
 pub mod error;
+pub mod geometry;
+pub mod hash_policy;
+pub mod lineage;
 pub mod manifest;
 pub mod quality;
 pub mod storage;

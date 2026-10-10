@@ -98,11 +98,17 @@ pub fn evaluate_frame(input: &QualityInput<'_>, thresholds: &QualityThresholds) 
         .map(|prev| prev == hash)
         .unwrap_or(false);
 
-    let duplicate_expected_while_paused = exact_duplicate && input.replay_paused;
+    use crate::capture::hash_policy::{interpret_duplicate_hash, DuplicateHashVerdict};
+    let verdict = interpret_duplicate_hash(
+        exact_duplicate,
+        input.replay_paused,
+        /* replay_expected_to_advance */ !input.replay_paused,
+    );
+    let duplicate_expected_while_paused =
+        matches!(verdict, DuplicateHashVerdict::AllowedStableWhilePaused);
     // If we keep getting identical frames while not paused, or gaps are unreasonably large
     // with identical content while the session claims to be capturing continuously, flag stuck.
-    let capture_backend_stuck = exact_duplicate
-        && !input.replay_paused
+    let capture_backend_stuck = matches!(verdict, DuplicateHashVerdict::PossibleStaleWhileAdvancing)
         && input.inter_frame_gap_ms.map(|g| g > 500).unwrap_or(true);
 
     if exact_duplicate && !duplicate_expected_while_paused {

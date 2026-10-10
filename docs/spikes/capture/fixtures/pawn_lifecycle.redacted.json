@@ -1,0 +1,45 @@
+{
+  "identity_semantics_version": "p0.6a-2026-10-10",
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "match_token": "9208210907649202700_0",
+  "notes": [
+    "Redacted: no Steam IDs, names, screenshots, or Demo bytes",
+    "Controllers identified as C<userid> only",
+    "Pawn handles are engine integers (not secret)"
+  ],
+  "verified": {
+    "controller_may_have_multiple_pawn_handles": true,
+    "pawn_handle_alone_is_not_match_unique": true,
+    "same_pawn_handle_reused_across_controllers_after_takeover": true,
+    "do_not_use_round_player_as_unique_life_key": true
+  },
+  "ordinary_multi_life": {
+    "controller": "C3",
+    "lives": [
+      {
+        "pawn_handle": -1370816145,
+        "example_death_demo_tick": 2702,
+        "round_id": 1,
+        "kind": "pre_takeover_life"
+      },
+      {
+        "pawn_handle": -1370816145,
+        "example_death_demo_tick": 33462,
+        "round_id": 6,
+        "kind": "pre_takeover_life_same_handle_later_round"
+      },
+      {
+        "pawn_handle": 432572463,
+        "example_death_demo_tick": 34176,
+        "round_id": 6,
+        "kind": "post_takeover_life"
+      }
+    ],
+    "conclusion": "One controller session (userid) accumulates multiple death-associated pawn handles; Storage v2 PawnLife keyed by controller_session + pawn_handle remains the correct grain."
+  },
+  "pawn_handle_reuse": {
+    "pawn_handle": 432572463,
+    "observed_on_controllers": ["C3", "C4", "C8"],
+    "conclusion": "Do not treat pawn_handle as a global identity without controller_session_id."
+  }
+}

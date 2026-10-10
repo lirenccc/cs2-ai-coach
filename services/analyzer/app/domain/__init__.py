@@ -1,5 +1,6 @@
 """Domain models and pure business logic."""
 
+from .evidence import EvidenceLineage, RoundPlayerState
 from .identity import ControllerSession, PawnLife, PlayerIdentity
 from .match_events import (
     DamageEventRecord,
@@ -12,10 +13,12 @@ from .match_events import (
 __all__ = [
     "ControllerSession",
     "DamageEventRecord",
+    "EvidenceLineage",
     "GrenadeEventRecord",
     "KillEventRecord",
     "PawnLife",
     "PlayerIdentity",
     "RoundMarker",
+    "RoundPlayerState",
     "RoundRecord",
 ]

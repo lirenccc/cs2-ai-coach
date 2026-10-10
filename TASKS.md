@@ -100,6 +100,21 @@
 - resize 后 frame pool recreate 路径可恢复
 - CI 不要求本机 CS2；真机入口为 ignored `probe_capture_*` / `probe_wgc_*`
 
+### P0.6A Event / identity / capture validation
+- [x] Evidence lineage 合约（可选字段；禁止 display name 作主键）
+- [x] Pawn-life / 多命验证（redacted fixture）
+- [x] BOT takeover 归因合约（A03 timeline；trade 标 UNRESOLVED）
+- [x] Halftime / side：`RoundPlayerState` + tick `side` 权威源
+- [x] Capture geometry 合约（client ≠ WGC content）
+- [x] Paused duplicate hash 语义
+- [x] Calibration/build mismatch → `REPLAY_CALIBRATION_BUILD_MISMATCH`
+- [x] Capture-at-event 脱敏结果夹具 + ignored 真机 probe
+- [x] 输出 `docs/spikes/capture/P0_6A_EVENT_IDENTITY_VALIDATION.md`
+
+**Acceptance**
+- 契约/夹具单测 CI 可跑；真机 probe 保持 ignored
+- 不改写 P0.2 parser / Storage v2 / P0.5A / P0.6 行为语义
+
 ### P0.7 AI spike
 - [x] AI provider interface
 - [x] Responses API adapter（可选 `openai` extra）

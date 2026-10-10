@@ -7,6 +7,8 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 pub const CAPTURE_MANIFEST_VERSION: &str = "p0.6-2026-10-10";
+/// P0.6A evidence lineage / geometry / identity semantics bundle version.
+pub const EVIDENCE_CONTRACT_BUNDLE_VERSION: &str = "p0.6a-2026-10-10";
 pub const DEFAULT_MAX_BURST_FRAMES: u32 = 16;
 pub const DEFAULT_MIN_FRAME_WIDTH: u32 = 64;
 pub const DEFAULT_MIN_FRAME_HEIGHT: u32 = 64;
@@ -179,6 +181,33 @@ impl ReplayCaptureContext {
         })
     }
 
+    /// Require observed CS2 build to match the P0.5A calibration fixture build.
+    pub fn require_calibrated_build(
+        &self,
+        observed_patch: &str,
+        observed_client: &str,
+        observed_buildid: &str,
+    ) -> Result<(), String> {
+        use crate::capture::lineage::{
+            calibrated_build_identity, check_calibration_compatibility, CaptureCalibrationContext,
+            CalibrationCompatibility, Cs2BuildIdentity,
+        };
+        let ctx = CaptureCalibrationContext {
+            replay_calibration_version: self.calibrated_replay_semantics_version.clone(),
+            expected_build: calibrated_build_identity(),
+            observed_build: Some(Cs2BuildIdentity {
+                patch_version: observed_patch.into(),
+                client_version: observed_client.into(),
+                steam_buildid: observed_buildid.into(),
+            }),
+        };
+        match check_calibration_compatibility(&ctx) {
+            CalibrationCompatibility::Compatible => Ok(()),
+            CalibrationCompatibility::BuildMismatch { code } => Err(code.to_string()),
+            CalibrationCompatibility::Uncalibrated { reason } => Err(reason),
+        }
+    }
+
     /// Production capture seek position — DemoTick only.
     pub fn seek_position(&self) -> Result<ReplaySeekPosition, String> {
         if self.requested_demo_tick == 0 {
@@ -310,5 +339,17 @@ mod tests {
         let mut ctx = ReplayCaptureContext::from_demo_tick(100).unwrap();
         ctx.requested_demo_tick = 0;
         assert!(ctx.seek_position().is_err());
+    }
+
+    #[test]
+    fn calibrated_build_mismatch_is_typed() {
+        let ctx = ReplayCaptureContext::from_demo_tick(4354).unwrap();
+        let err = ctx
+            .require_calibrated_build("1.41.9.0", "9999999", "25815307")
+            .unwrap_err();
+        assert_eq!(err, "REPLAY_CALIBRATION_BUILD_MISMATCH");
+        assert!(ctx
+            .require_calibrated_build("1.41.9.0", "2000930", "25815307")
+            .is_ok());
     }
 }

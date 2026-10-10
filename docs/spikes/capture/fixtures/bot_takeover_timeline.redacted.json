@@ -1,0 +1,62 @@
+{
+  "identity_semantics_version": "p0.6a-2026-10-10",
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "anchor_id": "A03_near_bot_death",
+  "takeover": {
+    "demo_tick": 33717,
+    "server_tick": 37496,
+    "controller_userid": 3,
+    "botid_raw": 3,
+    "pawn_handle": 432572463
+  },
+  "before": {
+    "controller_userid": 3,
+    "pawn_handle": -1370816145,
+    "death_demo_tick": 33462,
+    "round_id": 6
+  },
+  "after": {
+    "controller_userid": 3,
+    "pawn_handle": 432572463,
+    "death_demo_tick": 34176,
+    "round_id": 6,
+    "credited_identity_token": "C3"
+  },
+  "botid_equals_userid": true,
+  "attribution": [
+    {
+      "kind": "death",
+      "credited_to": "controller_session.player_identity_id when known; else controller_session only",
+      "certainty": "verified",
+      "notes": "Post-takeover player_death keeps the taking-over controller userid and the takeover pawn_handle"
+    },
+    {
+      "kind": "kill",
+      "credited_to": "attacker controller_session / player_identity_id at event tick",
+      "certainty": "derived",
+      "notes": "Kill events expose attacker_userid/pawn; credit the controller active at that tick"
+    },
+    {
+      "kind": "damage",
+      "credited_to": "attacker/victim controller_session at event tick",
+      "certainty": "derived",
+      "notes": "Same userid/pawn fields as kills; no separate takeover remap observed"
+    },
+    {
+      "kind": "survival",
+      "credited_to": "open pawn_life for controller_session (spawn..death)",
+      "certainty": "verified",
+      "notes": "Takeover starts a new pawn_life; prior life ends at pre-takeover death when present"
+    },
+    {
+      "kind": "trade_opportunity",
+      "credited_to": "UNRESOLVED without round-side + timing policy",
+      "certainty": "unresolved",
+      "notes": "Trade windows need side-aware teammates; do not invent from display names"
+    }
+  ],
+  "unresolved": [
+    "structural-probe botid equals userid on all 12 takeovers in this fixture; cannot distinguish bot controller id from human without richer entity state",
+    "PlayerIdentity steam linkage for C3 not committed in redacted fixtures"
+  ]
+}

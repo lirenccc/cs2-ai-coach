@@ -1,0 +1,69 @@
+{
+  "round_side_contract_version": "p0.6a-2026-10-10",
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "authoritative_source": "awpy tick props side/team_num at round freeze_end demo_tick",
+  "do_not_use": [
+    "initial roster team assignment as permanent side",
+    "round_number alone to infer halftime without tick/entity evidence"
+  ],
+  "samples": [
+    {
+      "round_id": 1,
+      "freeze_end_demo_tick": 1181,
+      "players": [
+        {"player_identity_id": "I1f1f79ae", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "I38565be8", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "I9f1615a2", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Ib7575a04", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Ic681f0fa", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Icd8e3998", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Id0c9adb9", "side": "ct", "team_num": 3, "source": "tick.side"}
+      ]
+    },
+    {
+      "round_id": 12,
+      "freeze_end_demo_tick": 68735,
+      "players": [
+        {"player_identity_id": "I1f1f79ae", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "I38565be8", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "I9f1615a2", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Ib7575a04", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Ic681f0fa", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Icd8e3998", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Id0c9adb9", "side": "ct", "team_num": 3, "source": "tick.side"}
+      ]
+    },
+    {
+      "round_id": 13,
+      "freeze_end_demo_tick": 75147,
+      "note": "first round after side transition",
+      "players": [
+        {"player_identity_id": "I1f1f79ae", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "I38565be8", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "I9f1615a2", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Ib7575a04", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Ic681f0fa", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Icd8e3998", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Id0c9adb9", "side": "t", "team_num": 2, "source": "tick.side"}
+      ]
+    },
+    {
+      "round_id": 18,
+      "freeze_end_demo_tick": 110792,
+      "players": [
+        {"player_identity_id": "I1f1f79ae", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "I38565be8", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "I9f1615a2", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Ib7575a04", "side": "ct", "team_num": 3, "source": "tick.side"},
+        {"player_identity_id": "Ic681f0fa", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Icd8e3998", "side": "t", "team_num": 2, "source": "tick.side"},
+        {"player_identity_id": "Id0c9adb9", "side": "t", "team_num": 2, "source": "tick.side"}
+      ]
+    }
+  ],
+  "verified": {
+    "all_sampled_identities_switch_side_between_r12_and_r13": true,
+    "r12_matches_r1_sides": true,
+    "r18_matches_r13_sides": true
+  }
+}

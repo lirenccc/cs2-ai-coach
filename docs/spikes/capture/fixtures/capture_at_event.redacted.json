@@ -1,0 +1,50 @@
+{
+  "evidence_lineage_version": "p0.6a-2026-10-10",
+  "replay_calibration_version": "p0.5a-2026-10-10",
+  "cs2_build_identity": "patch=1.41.9.0;client=2000930;buildid=25815307",
+  "settle_policy": {"fixed_duration": {"ms": 2000}},
+  "geometry_policy_version": "p0.6a-2026-10-10",
+  "notes": [
+    "Seek path is ReplaySeekPosition::DemoTick only",
+    "Visual POV correctness is out of scope; semantic_result may be not_visually_observable",
+    "frame hashes from P0.6 WGC run; screenshots not committed"
+  ],
+  "anchors": [
+    {
+      "anchor_id": "A01_early_plant",
+      "event_type": "bomb_planted",
+      "requested_demo_tick": 4354,
+      "round_id": 1,
+      "seek_calibration_version": "p0.5a-2026-10-10",
+      "capture_manifest_id": "cap-<redacted>-a01",
+      "frame_hash": "2925799442f38b4b30d95f71dcd8e29c92bb0d6fa50138d85bb482db746f7055",
+      "semantic_result": "correct_event_window",
+      "certainty": "derived",
+      "notes": "Distinct hash vs mid/late anchors after calibrated DemoTick seek; POV not verified"
+    },
+    {
+      "anchor_id": "A02_mid_defuse",
+      "event_type": "bomb_defused",
+      "requested_demo_tick": 42294,
+      "round_id": 7,
+      "seek_calibration_version": "p0.5a-2026-10-10",
+      "capture_manifest_id": "cap-<redacted>-a02",
+      "frame_hash": "e0370b197addc71af40527b54cb2670748c9659971f3bed295e30723299824fa",
+      "semantic_result": "not_visually_observable",
+      "certainty": "unresolved",
+      "notes": "Valid non-black frame captured; automatic POV not asserted"
+    },
+    {
+      "anchor_id": "A04_post_halftime_explode",
+      "event_type": "bomb_exploded",
+      "requested_demo_tick": 79639,
+      "round_id": 13,
+      "seek_calibration_version": "p0.5a-2026-10-10",
+      "capture_manifest_id": "cap-<redacted>-a04",
+      "frame_hash": "e0370b197addc71af40527b54cb2670748c9659971f3bed295e30723299824fa",
+      "semantic_result": "not_visually_observable",
+      "certainty": "unresolved",
+      "notes": "Lineage to DemoTick+calibration version verified; scene recognition from POV unresolved"
+    }
+  ]
+}

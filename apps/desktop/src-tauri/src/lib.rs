@@ -60,7 +60,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn app_phase_is_p0_6() {
-        assert_eq!(commands::get_app_phase(), "P0.6");
+    fn app_phase_is_p0_6a() {
+        assert_eq!(commands::get_app_phase(), "P0.6A");
     }
 }
