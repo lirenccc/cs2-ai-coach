@@ -1,0 +1,190 @@
+{
+  "rule_engine_contract_version": "rule-engine-v1-2026-10-10",
+  "thresholds_version": "rule-thresholds-v1-2026-10-10",
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "evaluated_rounds": 18,
+  "life_ending_events": 127,
+  "candidate_counts": {
+    "R001": 14,
+    "R002": 87,
+    "R003": 5
+  },
+  "unresolved_counts": {
+    "R001": 4,
+    "R002": 27,
+    "R003": 0
+  },
+  "r003_by_side": {
+    "ct": 3,
+    "t": 2
+  },
+  "r003_peak_advantage_histogram": {
+    "2": 5
+  },
+  "r003_sample_candidates": [
+    {
+      "rule_id": "R003",
+      "rule_version": "1.0.0",
+      "incident_type": "ADVANTAGE_LOSS_CANDIDATE",
+      "round_no": 3,
+      "round_id": "tok_e49d63b2a8",
+      "focus_side": "ct",
+      "focus_player_token": null,
+      "start_demo_tick": 14372,
+      "anchor_demo_tick": 17699,
+      "end_demo_tick": 17699,
+      "severity": 3,
+      "confidence": 1.0,
+      "metrics": {
+        "peak_advantage": 2,
+        "peak_alive_friendly": 2,
+        "peak_alive_enemy": 0,
+        "peak_demo_tick": 14372,
+        "final_round_winner": "t",
+        "win_reason": "ct_killed",
+        "collapse_demo_tick": 15625,
+        "minimum_later_advantage": 0,
+        "minimum_player_advantage": 2
+      },
+      "evidence_ids": [
+        "ev_3c87d43e475df19e",
+        "ev_6cd96b419fd9b128",
+        "ev_4a76dfcc09a3a905",
+        "ev_f76dfa298d74be54"
+      ],
+      "candidate_id": "inc_175aa7ccdd765fa0"
+    },
+    {
+      "rule_id": "R003",
+      "rule_version": "1.0.0",
+      "incident_type": "ADVANTAGE_LOSS_CANDIDATE",
+      "round_no": 6,
+      "round_id": "tok_25f1c790f1",
+      "focus_side": "ct",
+      "focus_player_token": null,
+      "start_demo_tick": 33032,
+      "anchor_demo_tick": 35287,
+      "end_demo_tick": 35287,
+      "severity": 3,
+      "confidence": 1.0,
+      "metrics": {
+        "peak_advantage": 2,
+        "peak_alive_friendly": 3,
+        "peak_alive_enemy": 1,
+        "peak_demo_tick": 33032,
+        "final_round_winner": "t",
+        "win_reason": "ct_killed",
+        "collapse_demo_tick": 33304,
+        "minimum_later_advantage": -1,
+        "minimum_player_advantage": 2
+      },
+      "evidence_ids": [
+        "ev_72fc9151548228e9",
+        "ev_3ad44088d2ad8fc6",
+        "ev_0e42e4a950b1c257",
+        "ev_3dee4f3c45ae0675"
+      ],
+      "candidate_id": "inc_64f69cc1ab25844a"
+    },
+    {
+      "rule_id": "R003",
+      "rule_version": "1.0.0",
+      "incident_type": "ADVANTAGE_LOSS_CANDIDATE",
+      "round_no": 8,
+      "round_id": "tok_99c66b8eed",
+      "focus_side": "ct",
+      "focus_player_token": null,
+      "start_demo_tick": 43795,
+      "anchor_demo_tick": 48678,
+      "end_demo_tick": 48678,
+      "severity": 3,
+      "confidence": 1.0,
+      "metrics": {
+        "peak_advantage": 2,
+        "peak_alive_friendly": 4,
+        "peak_alive_enemy": 2,
+        "peak_demo_tick": 43795,
+        "final_round_winner": "t",
+        "win_reason": "ct_killed",
+        "collapse_demo_tick": 46251,
+        "minimum_later_advantage": -1,
+        "minimum_player_advantage": 2
+      },
+      "evidence_ids": [
+        "ev_2186e2af20886b03",
+        "ev_e858f3beeaf4a287",
+        "ev_d2ea1a0eb4a2c957",
+        "ev_f27c7b92b222fa62"
+      ],
+      "candidate_id": "inc_cb5a676444bc5be6"
+    },
+    {
+      "rule_id": "R003",
+      "rule_version": "1.0.0",
+      "incident_type": "ADVANTAGE_LOSS_CANDIDATE",
+      "round_no": 15,
+      "round_id": "tok_50783c4a61",
+      "focus_side": "t",
+      "focus_player_token": null,
+      "start_demo_tick": 88430,
+      "anchor_demo_tick": 94313,
+      "end_demo_tick": 94313,
+      "severity": 3,
+      "confidence": 1.0,
+      "metrics": {
+        "peak_advantage": 2,
+        "peak_alive_friendly": 4,
+        "peak_alive_enemy": 2,
+        "peak_demo_tick": 88430,
+        "final_round_winner": "ct",
+        "win_reason": "t_killed",
+        "collapse_demo_tick": 89019,
+        "minimum_later_advantage": -2,
+        "minimum_player_advantage": 2
+      },
+      "evidence_ids": [
+        "ev_04f9a893ff1bf715",
+        "ev_07f6c19ae99b80cc",
+        "ev_142064d3e8b1ccf2",
+        "ev_51d34ace1c54e853"
+      ],
+      "candidate_id": "inc_fc56fbb8c020adf5"
+    },
+    {
+      "rule_id": "R003",
+      "rule_version": "1.0.0",
+      "incident_type": "ADVANTAGE_LOSS_CANDIDATE",
+      "round_no": 18,
+      "round_id": "tok_c53d8e591f",
+      "focus_side": "t",
+      "focus_player_token": null,
+      "start_demo_tick": 111341,
+      "anchor_demo_tick": 114407,
+      "end_demo_tick": 114407,
+      "severity": 3,
+      "confidence": 1.0,
+      "metrics": {
+        "peak_advantage": 2,
+        "peak_alive_friendly": 4,
+        "peak_alive_enemy": 2,
+        "peak_demo_tick": 111341,
+        "final_round_winner": "ct",
+        "win_reason": "t_killed",
+        "collapse_demo_tick": 111423,
+        "minimum_later_advantage": -2,
+        "minimum_player_advantage": 2
+      },
+      "evidence_ids": [
+        "ev_6e6f70adb4284372",
+        "ev_1f9be398cce72c17",
+        "ev_a514ce3b82abea24",
+        "ev_3aaad1cecde3a33d"
+      ],
+      "candidate_id": "inc_22ae52596da1ff67"
+    }
+  ],
+  "notes": [
+    "Redacted summary only \u2014 no Steam IDs, player names, or demo paths.",
+    "R003 uses conservative round-loss semantics + freeze_end selected_ticks sides."
+  ]
+}

@@ -159,11 +159,15 @@
 - [ ] event detail drawer
 
 ### P1.4 Rule Engine v1
-- [x] opening death
-- [x] untraded death
-- [ ] advantage throw candidate
+- [x] Rule interface + `IncidentCandidate` / `RuleEvidence` / `MATCHED|NOT_MATCHED|UNRESOLVED`
+- [x] R001 Opening Death（identity/side/same-tick；保留 `is_opening_death` 原语）
+- [x] R002 Untraded Death（round-side 队友；takeover → UNRESOLVED，不伪装 false）
+- [x] R003 Advantage Loss Candidate（`ADVANTAGE_LOSS_CANDIDATE`；`minimum_player_advantage=2`；权威 winner/side/alive）
+- [x] 确定性单测 + 私有 P0.2 opt-in 规则回归（redacted summary）
+- [x] 文档：`docs/04_ANALYSIS_ENGINE.md` + `docs/spikes/rules/RULE_ENGINE_V1.md`
 - [ ] isolated contact candidate
 - [ ] repeat peek candidate
+- [ ] unsupported entry candidate
 
 ### P1.5 Incident UI
 - [ ] evidence list

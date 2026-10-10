@@ -26,3 +26,31 @@ def team_code_from_num(value: Any) -> str | None:
     if number == 1:
         return "SPECTATOR"
     return None
+
+
+def normalize_team_code(value: Any) -> str | None:
+    """Lowercase side codes for rule/round-side contracts: ``ct`` / ``t``."""
+
+    if value is None:
+        return None
+    text = str(value).strip().lower()
+    if text in {"t", "terrorist", "terrorists"}:
+        return "t"
+    if text in {
+        "ct",
+        "counterterrorist",
+        "counter-terrorist",
+        "counter_terrorist",
+        "counter-terrorists",
+    }:
+        return "ct"
+    if text in {"spectator", "spec"}:
+        return "spectator"
+    mapped = team_code_from_num(value)
+    if mapped == "T":
+        return "t"
+    if mapped == "CT":
+        return "ct"
+    if mapped == "SPECTATOR":
+        return "spectator"
+    return None

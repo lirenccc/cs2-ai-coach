@@ -11,10 +11,17 @@ class Kill:
 
 
 def is_opening_death(kills: list[Kill], focus_player_id: str) -> bool:
+    """True when focus is among victims at the earliest DemoTick.
+
+    Same-tick multi-kills are all opening deaths; list order must not matter.
+    """
+
     if not kills:
         return False
-    first = min(kills, key=lambda kill: kill.tick)
-    return first.victim_id == focus_player_id
+    min_tick = min(kill.tick for kill in kills)
+    return any(
+        kill.tick == min_tick and kill.victim_id == focus_player_id for kill in kills
+    )
 
 
 def is_untraded_death(

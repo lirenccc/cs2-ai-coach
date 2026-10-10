@@ -26,7 +26,31 @@ apps/desktop/src-tauri/WixTools/
 runtime/**
 !runtime/.gitkeep
 services/analyzer/runtime/
+
+# Private demos / archives (never commit bytes or absolute local fixture trees)
 *.dem
+*.dem.gz
+*.dem.zip
+*.vdm
+private/
+local/private/
+fixtures/private/
+demos/
+
+# Local app DBs outside runtime/ (runtime/** already ignored)
+*.sqlite
+*.db
+!fixtures/**/*.json
+
+# Local capture / AI smoke frames (redacted JSON/docs fixtures stay tracked)
+captures/
+smoke_frames/
+**/*unredacted*.png
+**/*unredacted*.jpg
+**/*unredacted*.jpeg
+**/*unredacted*.webp
+**/*private*.png
+**/*private*.jpg
 
 # IDE / OS
 .idea/
@@ -43,12 +67,15 @@ Thumbs.db
 !.env.example
 *.pem
 *.key
+credentials.json
+secrets.json
 
 # Logs / temp
 *.log
 tmp/
 temp/
 .cache/
+pytest-cache-files-*/
 
 # Python tooling
 .python-version

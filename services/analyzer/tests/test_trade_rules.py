@@ -49,3 +49,14 @@ def test_no_focus_death_returns_false():
 def test_negative_trade_window_rejected():
     with pytest.raises(ValueError):
         is_untraded_death([], "focus", set(), -1)
+
+
+def test_same_tick_multi_kill_all_count_as_opening():
+    kills = [
+        Kill(100, "e1", "focus"),
+        Kill(100, "e2", "friend1"),
+    ]
+    assert is_opening_death(kills, "focus") is True
+    assert is_opening_death(kills, "friend1") is True
+    assert is_opening_death(list(reversed(kills)), "focus") is True
+    assert is_opening_death(list(reversed(kills)), "friend1") is True
