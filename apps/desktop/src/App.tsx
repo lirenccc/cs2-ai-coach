@@ -136,7 +136,7 @@ export default function App() {
     <main className="shell">
       <header className="hero">
         <div>
-          <div className="eyebrow">CS2 AI COACH · P1.3</div>
+          <div className="eyebrow">CS2 AI COACH · P1.4</div>
           <h1>Demo review, grounded in evidence.</h1>
           <p>
             打开已解析比赛的 Match Review：回合 / 时间线 / 确定性 Incident /

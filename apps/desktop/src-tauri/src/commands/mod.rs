@@ -1,6 +1,7 @@
 //! Narrow typed Tauri command surface.
 //! The renderer cannot build raw CS2 console lines or call the analyzer directly.
 //! Capture commands expose high-level ops only — no arbitrary HWND / raw D3D.
+//! Click-to-CS2 accepts only match_id + incident_id (no path / tick / console).
 
 use crate::bootstrap::app_phase;
 use crate::capture::adapter::{discover_running_cs2_window, CaptureAdapter, NativeCaptureAdapter};
@@ -8,10 +9,17 @@ use crate::capture::error::CaptureError;
 use crate::capture::types::{
     CaptureBurstRequest, CaptureFrameRequest, CaptureHealth, ReplayCaptureContext,
 };
+use crate::cs2::error::Cs2Error;
+use crate::cs2::incident_replay::{
+    run_replay_control, run_view_incident, IncidentReplayGate, IncidentReplayPlan,
+    ViewIncidentInCs2Result,
+};
 use crate::cs2::replay::ReplayCommand;
+use crate::cs2::session::ReplaySessionManager;
 use crate::sidecar::{self, BridgeError, SidecarManager, SidecarStatus};
 use serde::Serialize;
 use std::path::PathBuf;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tauri::State;
 
@@ -85,6 +93,64 @@ pub async fn get_match_review(
     match_id: String,
 ) -> Result<serde_json::Value, BridgeError> {
     state.get_match_review(match_id).await
+}
+
+fn map_cs2_bridge(err: Cs2Error) -> BridgeError {
+    BridgeError::new(err.code, err.message, false)
+}
+
+/// Click-to-CS2: renderer provides only stable domain IDs.
+#[tauri::command]
+pub async fn view_incident_in_cs2(
+    sidecar: State<'_, SidecarManager>,
+    replay: State<'_, Arc<Mutex<ReplaySessionManager>>>,
+    gate: State<'_, Arc<IncidentReplayGate>>,
+    match_id: String,
+    incident_id: String,
+) -> Result<ViewIncidentInCs2Result, BridgeError> {
+    let generation = gate.begin();
+    let plan_json = sidecar
+        .get_incident_replay_plan(match_id, incident_id)
+        .await?;
+    let plan: IncidentReplayPlan = serde_json::from_value(plan_json).map_err(|e| {
+        BridgeError::new(
+            "SIDECAR_MALFORMED_RESPONSE",
+            format!("replay plan decode failed: {e}"),
+            true,
+        )
+    })?;
+
+    let gate_owned = gate.inner().clone();
+    let replay_owned = replay.inner().clone();
+    let result = tauri::async_runtime::spawn_blocking(move || {
+        run_view_incident(&gate_owned, generation, &replay_owned, &plan)
+    })
+    .await
+    .map_err(|e| BridgeError::new("REPLAY_ACTION_FAILED", e.to_string(), true))?;
+
+    match result {
+        Ok(value) => {
+            if !gate.is_current(generation) {
+                Err(BridgeError::new(
+                    "REPLAY_ACTION_SUPERSEDED",
+                    "A newer View in CS2 request superseded this action",
+                    false,
+                ))
+            } else {
+                Ok(value)
+            }
+        }
+        Err(err) => Err(map_cs2_bridge(err)),
+    }
+}
+
+/// Bounded replay controls (no free-form timescale / console).
+#[tauri::command]
+pub fn replay_control(
+    replay: State<'_, Arc<Mutex<ReplaySessionManager>>>,
+    action: String,
+) -> Result<(), BridgeError> {
+    run_replay_control(replay.inner(), &action).map_err(map_cs2_bridge)
 }
 
 #[tauri::command]

@@ -7,6 +7,7 @@
 
 pub mod calibration;
 pub mod error;
+pub mod incident_replay;
 pub mod netcon;
 pub mod process;
 pub mod replay;

@@ -188,27 +188,32 @@
 
 ## P2 — CS2 Replay Integration
 
+> Spike doc / phase label for first Click-to-CS2 slice: **P1.4**  
+> (`docs/spikes/replay/P1_4_CLICK_TO_CS2.md`)
+
 ### P2.1 Session manager
-- [ ] connect status
-- [ ] launch/restart UX
-- [ ] demo staging
-- [ ] cleanup
+- [x] connect status（typed session + UI Failed remediation）
+- [x] launch/restart UX（reuse P0.5 launch; restart-required when NetCon missing）
+- [x] demo staging（SHA-safe; match-bound source resolution）
+- [x] cleanup（app Exit closes replay session）
+- [ ] richer persistent session status strip（后续）
 
 ### P2.2 Replay
-- [ ] load demo
-- [ ] seek with pre-roll
-- [ ] pause/resume
-- [ ] timescale
+- [x] load demo（high-level coordinator）
+- [x] seek with pre-roll（DemoTick + timing metadata; no hard-coded 64 Hz）
+- [x] pause/resume（typed `replay_control`）
+- [x] timescale（0.5x / 1.0x presets only）
 - [ ] POV focus best effort
 
 ### P2.3 Incident playback
-- [ ] “在 CS2 查看”
-- [ ] active incident state
+- [x] “在 CS2 查看” / View in CS2（`view_incident_in_cs2(match_id, incident_id)`）
+- [x] active incident replay state（Idle/Preparing/Playing/Failed + supersede policy）
 - [ ] next/previous incident
 - [ ] hotkeys
 
 **P2 Exit**
-从 Incident 点击到 CS2 正确时刻的成功率达到可用水平，并有失败恢复。
+从 Incident 点击到 CS2 正确时刻的成功率达到可用水平，并有失败恢复。  
+P1.4 已交付首条可用 Click-to-CS2 链路；POV / next-prev / hotkeys 仍属后续。
 
 ---
 

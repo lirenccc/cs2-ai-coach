@@ -47,6 +47,24 @@ function remediationFor(code: string): string | undefined {
       return "Import the demo first, then open review with the returned match_id.";
     case "MATCH_NOT_PARSED":
       return "Re-import the demo; review requires a completed parse.";
+    case "INCIDENT_NOT_FOUND":
+      return "Refresh Match Review; the incident may no longer exist in the deterministic result.";
+    case "REPLAY_SOURCE_MISSING":
+      return "Re-import the original Demo file, then retry View in CS2.";
+    case "REPLAY_CALIBRATION_BUILD_MISMATCH":
+      return "CS2 build does not match calibrated DemoTick semantics; recalibrate or use the verified build.";
+    case "CS2_ALREADY_RUNNING_WITHOUT_NETCON":
+      return "Close CS2, then relaunch from the coach so -netconport can be applied.";
+    case "CS2_TOOLS_UNAVAILABLE":
+      return "Restore Workshop Tools (assetsystem.dll) or launch CS2 from Steam without -tools for normal play.";
+    case "CS2_NOT_INSTALLED":
+    case "STEAM_NOT_FOUND":
+      return "Install Steam/CS2 (appid 730), then retry.";
+    case "NETCON_CONNECTION_LOST":
+    case "NETCON_NOT_CONNECTED":
+      return "Reconnect or relaunch CS2 with a coach-managed NetCon session.";
+    case "REPLAY_ACTION_SUPERSEDED":
+      return "Only the latest View in CS2 request is applied.";
     case "SIDECAR_MALFORMED_RESPONSE":
       return "Restart the app; if it persists, file a bug with the analyzer version.";
     default:

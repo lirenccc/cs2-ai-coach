@@ -235,6 +235,28 @@ pub async fn get_match_review_at(
     get_json_at(endpoint, &path, Duration::from_secs(60)).await
 }
 
+fn validate_incident_id(incident_id: &str) -> Result<(), BridgeError> {
+    if incident_id.is_empty() || incident_id.contains('/') || incident_id.contains('\\') {
+        return Err(BridgeError::new(
+            "INCIDENT_NOT_FOUND",
+            "incident_id must be a non-empty opaque id",
+            false,
+        ));
+    }
+    Ok(())
+}
+
+pub async fn get_incident_replay_plan_at(
+    endpoint: &SessionEndpoint,
+    match_id: &str,
+    incident_id: &str,
+) -> Result<JsonValue, BridgeError> {
+    validate_match_id(match_id)?;
+    validate_incident_id(incident_id)?;
+    let path = format!("/v1/matches/{match_id}/incidents/{incident_id}/replay-plan");
+    get_json_at(endpoint, &path, Duration::from_secs(60)).await
+}
+
 #[derive(Debug, Serialize)]
 struct ImportDemoBody<'a> {
     path: &'a str,

@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type {
   MatchReview,
   MatchReviewIncident,
 } from "@cs2-ai-coach/contracts";
+import { asBridgeError, formatBridgeError } from "../bridgeError";
+import { replayControl, viewIncidentInCs2 } from "../native";
 import {
   incidentTypeLabel,
   playerDisplayName,
@@ -20,6 +22,13 @@ import {
   type SeverityFilter,
   type SideFilter,
 } from "./model";
+import {
+  applyReplayFailure,
+  applyReplaySuccess,
+  beginReplayRequest,
+  phaseLabel,
+  type ReplayUiState,
+} from "./replayAction";
 import { formatDemoTick } from "./timing";
 
 export interface MatchReviewPageProps {
@@ -30,6 +39,8 @@ export interface MatchReviewPageProps {
 export function MatchReviewPage({ review, onBack }: MatchReviewPageProps) {
   const [filters, setFilters] = useState<ReviewFilters>(DEFAULT_REVIEW_FILTERS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [replay, setReplay] = useState<ReplayUiState>({ phase: "Idle" });
+  const replayRequestRef = useRef(0);
 
   const nameById = useMemo(() => {
     const map = new Map<string, string | null | undefined>();
@@ -58,20 +69,50 @@ export function MatchReviewPage({ review, onBack }: MatchReviewPageProps) {
   }, [filters.roundId, review.rounds]);
 
   const tickRate = review.match.tick_rate;
+  const matchId = review.match.match_id;
+  const replayBusy =
+    replay.phase === "Preparing" ||
+    replay.phase === "LaunchingCS2" ||
+    replay.phase === "Connecting" ||
+    replay.phase === "LoadingDemo" ||
+    replay.phase === "Seeking";
+
+  async function onViewInCs2(incidentId: string) {
+    const started = beginReplayRequest(replayRequestRef.current, incidentId);
+    replayRequestRef.current = started.requestId;
+    setReplay(started.state);
+    try {
+      const result = await viewIncidentInCs2(matchId, incidentId);
+      setReplay((current) =>
+        applyReplaySuccess(current, started.requestId, result),
+      );
+    } catch (error) {
+      const bridge = asBridgeError(error);
+      setReplay((current) =>
+        applyReplayFailure(
+          current,
+          started.requestId,
+          incidentId,
+          bridge.code,
+          bridge.message,
+        ),
+      );
+    }
+  }
 
   return (
     <section className="review" aria-label="Match review">
       <header className="reviewHeader">
         <div>
-          <div className="eyebrow">MATCH REVIEW · OFFLINE</div>
+          <div className="eyebrow">MATCH REVIEW · P1.4 CLICK-TO-CS2</div>
           <h1>
             {review.match.map_name ?? "Unknown map"}{" "}
             <span className="mutedInline">#{review.match.match_id.slice(0, 8)}</span>
           </h1>
           <p>
             Deterministic R001–R003 projection · tick rate{" "}
-            {tickRate != null && tickRate > 0 ? `${tickRate} Hz` : "unknown"} · no
-            CS2 / AI required
+            {tickRate != null && tickRate > 0 ? `${tickRate} Hz` : "unknown"} ·
+            View in CS2 seeks calibrated DemoTick (POV not auto-selected)
           </p>
         </div>
         <button type="button" onClick={onBack}>
@@ -332,6 +373,9 @@ export function MatchReviewPage({ review, onBack }: MatchReviewPageProps) {
         incident={selected}
         tickRate={tickRate}
         nameById={nameById}
+        replay={replay}
+        replayBusy={replayBusy}
+        onViewInCs2={onViewInCs2}
         onClose={() => setSelectedId(null)}
       />
     </section>
@@ -342,11 +386,17 @@ function EvidenceDrawer({
   incident,
   tickRate,
   nameById,
+  replay,
+  replayBusy,
+  onViewInCs2,
   onClose,
 }: {
   incident: MatchReviewIncident | null;
   tickRate: number | null | undefined;
   nameById: Map<string, string | null | undefined>;
+  replay: ReplayUiState;
+  replayBusy: boolean;
+  onViewInCs2: (incidentId: string) => void;
   onClose: () => void;
 }) {
   if (!incident) {
@@ -355,7 +405,7 @@ function EvidenceDrawer({
         <h2>Evidence</h2>
         <p className="muted">Select an incident to inspect structured evidence.</p>
         <p className="muted">
-          Future: View in CS2 (anchor tick) · optional AI explanation panel.
+          Select an incident, then ▶ View in CS2. POV is not automatically selected yet.
         </p>
       </section>
     );
@@ -371,6 +421,54 @@ function EvidenceDrawer({
           Close
         </button>
       </div>
+
+      <div className="replayActions" aria-label="Click to CS2">
+        <button
+          type="button"
+          className="primaryAction"
+          disabled={replayBusy}
+          aria-label={`View incident ${incident.incident_id} in CS2`}
+          onClick={() => onViewInCs2(incident.incident_id)}
+        >
+          ▶ View in CS2
+        </button>
+        {replay.phase === "Playing" ? (
+          <div className="replayControls" aria-label="Replay controls">
+            <button type="button" onClick={() => void replayControl("pause")}>
+              Pause
+            </button>
+            <button type="button" onClick={() => void replayControl("resume")}>
+              Resume
+            </button>
+            <button
+              type="button"
+              onClick={() => void replayControl("timescale_half")}
+            >
+              0.5x
+            </button>
+            <button
+              type="button"
+              onClick={() => void replayControl("timescale_one")}
+            >
+              1.0x
+            </button>
+          </div>
+        ) : null}
+        <p className="replayStatus" role="status" aria-live="polite">
+          {phaseLabel(replay.phase)}
+          {replay.phase === "Failed"
+            ? ` — ${formatBridgeError({
+                code: replay.code,
+                message: replay.message,
+                retryable: false,
+              })}`
+            : null}
+          {replay.phase === "Playing"
+            ? ` · seek DemoTick ${replay.result.requested_demo_tick} · POV not auto-selected`
+            : null}
+        </p>
+      </div>
+
       <dl className="evidenceDl">
         <dt>Incident ID</dt>
         <dd>{incident.incident_id}</dd>

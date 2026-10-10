@@ -42,7 +42,17 @@ export type BridgeErrorCode =
   | "SIDECAR_MALFORMED_RESPONSE"
   | "MATCH_NOT_FOUND"
   | "MATCH_NOT_PARSED"
-  | "MATCH_ID_INVALID";
+  | "MATCH_ID_INVALID"
+  | "INCIDENT_NOT_FOUND"
+  | "REPLAY_SOURCE_MISSING"
+  | "REPLAY_CALIBRATION_BUILD_MISMATCH"
+  | "REPLAY_ACTION_SUPERSEDED"
+  | "CS2_ALREADY_RUNNING_WITHOUT_NETCON"
+  | "CS2_TOOLS_UNAVAILABLE"
+  | "CS2_NOT_INSTALLED"
+  | "STEAM_NOT_FOUND"
+  | "NETCON_CONNECTION_LOST"
+  | "NETCON_NOT_CONNECTED";
 
 export interface BridgeError {
   code: BridgeErrorCode | string;
@@ -228,4 +238,73 @@ export interface MatchReview {
   incidents: MatchReviewIncident[];
   analysis_coverage: AnalysisCoverageRule[];
   unresolved_evaluations: MatchReviewUnresolved[];
+}
+
+/** Renderer-safe IncidentReplayPlan (no absolute paths / NetCon / tokens). */
+export const INCIDENT_REPLAY_PLAN_VERSION = "1.0.0";
+export const REPLAY_SEMANTICS_VERSION = "p0.5a-2026-10-10";
+
+export type ReplayTickDomain = "DemoTick";
+
+export interface IncidentReplayPlan {
+  version: string;
+  match_id: string;
+  incident_id: string;
+  rule_id: string;
+  round_id: string;
+  round_number: number;
+  start_demo_tick: number;
+  anchor_demo_tick: number;
+  end_demo_tick: number;
+  seek_demo_tick: number;
+  replay_tick_domain: ReplayTickDomain;
+  replay_semantics_version: string;
+  timing_source: string;
+  verified_tick_rate?: number | null;
+  timing_degraded?: boolean;
+  pre_roll_seconds: number;
+  settle_policy: string;
+  settle_debounce_ms: number;
+  timescale: number;
+  auto_resume: boolean;
+  pov_auto_selected: boolean;
+  demo_sha256: string;
+  demo_source_available?: boolean;
+}
+
+export type IncidentReplayUiPhase =
+  | "Idle"
+  | "Preparing"
+  | "LaunchingCS2"
+  | "Connecting"
+  | "LoadingDemo"
+  | "Seeking"
+  | "Playing"
+  | "Failed";
+
+export type ReplayControlAction =
+  | "pause"
+  | "resume"
+  | "timescale_half"
+  | "timescale_one";
+
+export interface EnginePositionEvidence {
+  demo_tick: number;
+  game_tick?: number | null;
+}
+
+export interface ViewIncidentInCs2Result {
+  phase: IncidentReplayUiPhase;
+  match_id: string;
+  incident_id: string;
+  rule_id: string;
+  seek_demo_tick: number;
+  anchor_demo_tick: number;
+  requested_demo_tick: number;
+  command_delivery_ok: boolean;
+  engine_position_evidence?: EnginePositionEvidence | null;
+  timescale: number;
+  pov_auto_selected: boolean;
+  notes: string[];
+  demo_sha256_prefix: string;
 }

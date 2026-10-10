@@ -1,8 +1,8 @@
 //! Owns analyzer process lifecycle: random loopback port, session token, spawn/stop.
 
 use super::{
-    get_match_review_at, health_at, import_demo_at, request_shutdown, AnalyzerHealth, BridgeError,
-    SessionEndpoint,
+    get_incident_replay_plan_at, get_match_review_at, health_at, import_demo_at, request_shutdown,
+    AnalyzerHealth, BridgeError, SessionEndpoint,
 };
 use serde_json::Value as JsonValue;
 use rand::RngCore;
@@ -148,6 +148,17 @@ impl SidecarManager {
     pub async fn get_match_review(&self, match_id: String) -> Result<JsonValue, BridgeError> {
         self.with_ready_endpoint(move |endpoint| async move {
             get_match_review_at(&endpoint, &match_id).await
+        })
+        .await
+    }
+
+    pub async fn get_incident_replay_plan(
+        &self,
+        match_id: String,
+        incident_id: String,
+    ) -> Result<JsonValue, BridgeError> {
+        self.with_ready_endpoint(move |endpoint| async move {
+            get_incident_replay_plan_at(&endpoint, &match_id, &incident_id).await
         })
         .await
     }

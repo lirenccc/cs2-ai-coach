@@ -1,15 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
   CONTRACTS_SCHEMA_VERSION,
+  INCIDENT_REPLAY_PLAN_VERSION,
   MATCH_REVIEW_SCHEMA_VERSION,
+  REPLAY_SEMANTICS_VERSION,
   type AnalyzerHealth,
   type BootstrapInfo,
   type BridgeError,
   type ControllerSession,
   type ImportDemoResponse,
+  type IncidentReplayPlan,
   type MatchReview,
   type PawnLife,
   type PlayerIdentity,
+  type ViewIncidentInCs2Result,
 } from "./index";
 
 describe("contracts bootstrap", () => {
@@ -177,5 +181,54 @@ describe("contracts bootstrap", () => {
     expect(review.incidents[0]?.incident_type).toBe("ADVANTAGE_LOSS_CANDIDATE");
     expect(review.match).not.toHaveProperty("original_path");
     expect(review).not.toHaveProperty("session_token");
+  });
+
+  it("types IncidentReplayPlan without private path or NetCon fields", () => {
+    const plan: IncidentReplayPlan = {
+      version: INCIDENT_REPLAY_PLAN_VERSION,
+      match_id: "match-1",
+      incident_id: "inc_1",
+      rule_id: "R001",
+      round_id: "r1",
+      round_number: 1,
+      start_demo_tick: 300,
+      anchor_demo_tick: 500,
+      end_demo_tick: 520,
+      seek_demo_tick: 300,
+      replay_tick_domain: "DemoTick",
+      replay_semantics_version: REPLAY_SEMANTICS_VERSION,
+      timing_source: "match.tick_rate",
+      verified_tick_rate: 128,
+      pre_roll_seconds: 5,
+      settle_policy: "fixed_debounce_ms",
+      settle_debounce_ms: 2000,
+      timescale: 0.5,
+      auto_resume: true,
+      pov_auto_selected: false,
+      demo_sha256: "ab".repeat(32),
+      demo_source_available: true,
+    };
+    expect(plan.replay_tick_domain).toBe("DemoTick");
+    expect(plan).not.toHaveProperty("demo_source_path");
+    expect(plan).not.toHaveProperty("server_tick");
+    expect(plan).not.toHaveProperty("netcon_port");
+    expect(plan).not.toHaveProperty("session_token");
+
+    const result: ViewIncidentInCs2Result = {
+      phase: "Playing",
+      match_id: plan.match_id,
+      incident_id: plan.incident_id,
+      rule_id: plan.rule_id,
+      seek_demo_tick: plan.seek_demo_tick,
+      anchor_demo_tick: plan.anchor_demo_tick,
+      requested_demo_tick: plan.seek_demo_tick,
+      command_delivery_ok: true,
+      timescale: 0.5,
+      pov_auto_selected: false,
+      notes: ["POV not automatically selected yet"],
+      demo_sha256_prefix: plan.demo_sha256.slice(0, 12),
+    };
+    expect(result.phase).toBe("Playing");
+    expect(result).not.toHaveProperty("demo_source_path");
   });
 });

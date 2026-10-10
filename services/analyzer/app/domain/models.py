@@ -147,3 +147,33 @@ class MatchReviewResponse(BaseModel):
     incidents: list[MatchReviewIncident]
     analysis_coverage: list[AnalysisCoverageRule]
     unresolved_evaluations: list[MatchReviewUnresolved]
+
+
+class IncidentReplayPlan(BaseModel):
+    """Canonical Click-to-CS2 plan. Absolute paths are for native only."""
+
+    version: str
+    match_id: str
+    incident_id: str
+    rule_id: str
+    round_id: str
+    round_number: int
+    start_demo_tick: int
+    anchor_demo_tick: int
+    end_demo_tick: int
+    seek_demo_tick: int
+    replay_tick_domain: str = "DemoTick"
+    replay_semantics_version: str
+    timing_source: str
+    verified_tick_rate: float | None = None
+    timing_degraded: bool = False
+    pre_roll_seconds: float
+    settle_policy: str
+    settle_debounce_ms: int
+    timescale: float
+    auto_resume: bool = True
+    pov_auto_selected: bool = False
+    demo_sha256: str
+    demo_source_available: bool = False
+    # Consumed only by Tauri; never part of the renderer TypeScript contract.
+    demo_source_path: str | None = None

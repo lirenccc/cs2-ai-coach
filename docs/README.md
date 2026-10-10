@@ -29,9 +29,12 @@ Also:
 | [spikes/real-demo/SCHEMA_DECISIONS.md](spikes/real-demo/SCHEMA_DECISIONS.md) | Identity / tick / round schema decisions from that fixture |
 | [spikes/real-demo/VALIDATION.md](spikes/real-demo/VALIDATION.md) | v0.2 scaffold validation notes |
 | [spikes/replay/P0_5_NETCON_STATUS.md](spikes/replay/P0_5_NETCON_STATUS.md) | Real-CS2 NetCon feasibility spike status |
-| [spikes/replay/fixtures/](spikes/replay/fixtures/) | Redacted NetCon console excerpts |
+| [spikes/replay/P0_5A_TICK_CALIBRATION.md](spikes/replay/P0_5A_TICK_CALIBRATION.md) | DemoTick calibration for `demo_gototick` |
+| [spikes/replay/P1_4_CLICK_TO_CS2.md](spikes/replay/P1_4_CLICK_TO_CS2.md) | Click-to-CS2 Incident Replay (desktop → CS2) |
+| [spikes/review/MATCH_REVIEW_V1.md](spikes/review/MATCH_REVIEW_V1.md) | Offline Match Review projection |
+| [spikes/replay/fixtures/](spikes/replay/fixtures/) | Redacted NetCon / replay-plan excerpts |
 
-Milestone numbering (current): **P0.4 Storage v2** (complete) → **P0.5 NetCon** → **P0.5A tick calibration** → **P0.6 Windows capture**.
+Milestone numbering (current): **P1.4 Click-to-CS2** (see spike doc) after P1.3 Match Review / Rule Engine R001–R003.
 
 Private `.dem` files are never committed. Golden redacted summary lives under `fixtures/real-demo/expected/`.
 

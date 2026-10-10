@@ -18,6 +18,14 @@ class DemoRepository:
     def __init__(self, database: Database):
         self.database = database
 
+    def get(self, demo_id: str) -> DemoRecord | None:
+        with self.database.connect() as conn:
+            row = conn.execute(
+                "SELECT id, sha256, original_path FROM demos WHERE id = ?",
+                (demo_id,),
+            ).fetchone()
+        return DemoRecord(**dict(row)) if row else None
+
     def find_by_sha256(self, digest: str) -> DemoRecord | None:
         with self.database.connect() as conn:
             row = conn.execute(

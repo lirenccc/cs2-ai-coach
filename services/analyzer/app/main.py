@@ -13,6 +13,7 @@ from .domain.models import (
     HealthResponse,
     ImportDemoRequest,
     ImportDemoResponse,
+    IncidentReplayPlan,
     MatchReviewResponse,
     ParserHealth,
     ShutdownResponse,
@@ -20,6 +21,7 @@ from .domain.models import (
 from .errors import AppError
 from .security import make_token_verifier
 from .services.import_demo import ImportDemoService
+from .services.incident_replay import IncidentNotFoundError, IncidentReplayService
 from .services.match_review import MatchNotFoundError, MatchReviewService
 from .storage.db import Database
 from .storage.demo_repository import DemoRepository
@@ -60,6 +62,7 @@ def create_app(
         persist_parsed=persist_parsed,
     )
     review_service = MatchReviewService(match_repo)
+    replay_service = IncidentReplayService(match_repo, demo_repo, review_service)
     verify = make_token_verifier(settings)
 
     app = FastAPI(
@@ -71,7 +74,11 @@ def create_app(
 
     @app.exception_handler(AppError)
     async def app_error_handler(_request: Request, exc: AppError):
-        status = 404 if isinstance(exc, MatchNotFoundError) else 400
+        status = (
+            404
+            if isinstance(exc, (MatchNotFoundError, IncidentNotFoundError))
+            else 400
+        )
         return JSONResponse(
             status_code=status,
             content={
@@ -138,6 +145,17 @@ def create_app(
     async def get_match_review(match_id: str) -> MatchReviewResponse:
         payload = review_service.get_review(match_id)
         return MatchReviewResponse.model_validate(payload)
+
+    @app.get(
+        "/v1/matches/{match_id}/incidents/{incident_id}/replay-plan",
+        response_model=IncidentReplayPlan,
+        dependencies=[Depends(verify)],
+    )
+    async def get_incident_replay_plan(
+        match_id: str, incident_id: str
+    ) -> IncidentReplayPlan:
+        payload = replay_service.get_replay_plan(match_id, incident_id)
+        return IncidentReplayPlan.model_validate(payload)
 
     return app
 

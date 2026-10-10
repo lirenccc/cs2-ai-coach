@@ -572,3 +572,67 @@ fn probe_replay_tick_calibration() {
     );
     session.close();
 }
+
+/// P1.4 Click-to-CS2: stage + DemoTick seek from a redacted plan fixture.
+/// Full desktop GUI smoke remains manual; this validates the native seek path.
+#[test]
+#[ignore = "P1.4 real-CS2 Click-to-CS2; launches CS2; not for CI"]
+fn probe_click_to_cs2_incident_seek() {
+    use super::incident_replay::{
+        enforce_calibration_guard, read_observed_build_identity, resolve_demo_source,
+        validate_plan_for_production, IncidentReplayPlan, DEFAULT_SETTLE_MS,
+    };
+    use std::sync::Mutex;
+
+    let demo = real_demo_path().expect("set CS2_COACH_REAL_DEMO");
+    let fixture = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../..")
+        .join("docs/spikes/replay/fixtures/p1_4_replay_plans.redacted.json");
+    let raw = std::fs::read_to_string(&fixture).expect("plan fixture");
+    let doc: serde_json::Value = serde_json::from_str(&raw).expect("json");
+    let plans = doc["plans"].as_array().expect("plans");
+    assert!(plans.len() >= 3);
+
+    let mut session = ReplaySession::new(staging_root());
+    session.start_launch().expect("launch");
+    session.connect().expect("connect");
+    enforce_calibration_guard(read_observed_build_identity()).expect("calibration");
+
+    for plan_val in plans {
+        let mut plan: IncidentReplayPlan =
+            serde_json::from_value(plan_val.clone()).expect("plan decode");
+        // Fixture is renderer-safe; inject private source for this probe only.
+        plan.demo_source_path = Some(demo.to_string_lossy().into_owned());
+        validate_plan_for_production(&plan).expect("plan ok");
+        let source = resolve_demo_source(&plan, &staging_root()).expect("source");
+        let (staged, _) = session.stage_and_play_demo(&source).expect("stage/play");
+        assert_eq!(staged.sha256, plan.demo_sha256);
+        std::thread::sleep(Duration::from_millis(1500));
+        let _ = session.pause().expect("pause");
+        let seek = ReplayTick::demo(plan.seek_demo_tick);
+        let resp = session.go_to_tick(seek).expect("seek");
+        std::thread::sleep(Duration::from_millis(
+            if plan.settle_debounce_ms == 0 {
+                DEFAULT_SETTLE_MS
+            } else {
+                plan.settle_debounce_ms
+            },
+        ));
+        let skip = parse_demo_skip_report(&resp.raw_text);
+        eprintln!(
+            "rule={} seek={} delivery_chars={} engine_skip={:?}",
+            plan.rule_id,
+            plan.seek_demo_tick,
+            resp.raw_text.len(),
+            skip.as_ref().map(|s| s.demo_tick)
+        );
+        let _ = session.timescale(0.5).expect("timescale");
+        let _ = session.resume().expect("resume");
+        // Idempotent reseek same plan.
+        let _ = session.pause().expect("pause2");
+        let _ = session.go_to_tick(ReplayTick::demo(plan.seek_demo_tick)).expect("reseek");
+    }
+    // Mutex unused — documents coordinator ownership model for future wiring.
+    let _mgr = Mutex::new(());
+    session.close();
+}

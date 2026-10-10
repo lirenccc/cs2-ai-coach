@@ -92,6 +92,13 @@ footer { color: #64727f; font-size: 12px; text-align: center; padding: 28px 0 0;
   border: 1px solid #232e38; background: #111820; border-radius: 14px; padding: 16px;
 }
 .evidenceDrawer.empty { color: #80909e; }
+.replayActions { display: grid; gap: 10px; margin: 12px 0 4px; }
+.replayControls { display: flex; flex-wrap: wrap; gap: 8px; }
+.primaryAction {
+  background: #1d3a32; border-color: #2f6b57; color: #d7fff0; font-weight: 700;
+}
+.primaryAction:disabled { opacity: 0.55; cursor: wait; }
+.replayStatus { margin: 0; color: #9eacb9; font-size: 13px; line-height: 1.5; }
 .evidenceDl {
   display: grid; grid-template-columns: 140px 1fr; gap: 8px 12px; margin: 12px 0 0;
 }

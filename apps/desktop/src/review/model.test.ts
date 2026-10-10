@@ -29,6 +29,16 @@ describe("match review model", () => {
     expect(filtered[0]?.incident_id).toBe("inc_r001_a");
   });
 
+  it("exposes stable incident ids for Click-to-CS2 without tick math in UI", () => {
+    for (const incident of SYNTHETIC_MATCH_REVIEW.incidents) {
+      expect(incident.incident_id).toMatch(/^inc_/);
+      expect(typeof incident.anchor_demo_tick).toBe("number");
+    }
+    // UI must send IDs only — never invent seek ticks from these fields.
+    expect(ruleLabel("R001")).toContain("Opening");
+    expect(incidentTypeLabel("ADVANTAGE_LOSS_CANDIDATE")).toContain("Advantage");
+  });
+
   it("does not treat unresolved evaluations as incidents", () => {
     expect(
       SYNTHETIC_MATCH_REVIEW.incidents.every((i) => i.status === "candidate"),

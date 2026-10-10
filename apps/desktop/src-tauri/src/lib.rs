@@ -5,8 +5,9 @@ mod cs2;
 mod security;
 mod sidecar;
 
+use cs2::incident_replay::IncidentReplayGate;
 use cs2::session::ReplaySessionManager;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 use tauri::Manager;
 
 fn default_demo_staging_root() -> std::path::PathBuf {
@@ -24,9 +25,10 @@ pub fn run() {
         .setup(|app| {
             let manager = tauri::async_runtime::block_on(sidecar::SidecarManager::start());
             app.manage(manager);
-            app.manage(Mutex::new(ReplaySessionManager::new(
+            app.manage(Arc::new(Mutex::new(ReplaySessionManager::new(
                 default_demo_staging_root(),
-            )));
+            ))));
+            app.manage(Arc::new(IncidentReplayGate::new()));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -36,6 +38,8 @@ pub fn run() {
             commands::sidecar_status,
             commands::import_demo,
             commands::get_match_review,
+            commands::view_incident_in_cs2,
+            commands::replay_control,
             commands::preview_replay_command,
             commands::capture_health,
             commands::capture_cs2_snapshot,
@@ -48,7 +52,9 @@ pub fn run() {
                 if let Some(manager) = app_handle.try_state::<sidecar::SidecarManager>() {
                     tauri::async_runtime::block_on(manager.stop());
                 }
-                if let Some(replay) = app_handle.try_state::<Mutex<ReplaySessionManager>>() {
+                if let Some(replay) =
+                    app_handle.try_state::<Arc<Mutex<ReplaySessionManager>>>()
+                {
                     if let Ok(mut guard) = replay.lock() {
                         guard.close();
                     }
@@ -62,7 +68,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn app_phase_is_p1_3() {
-        assert_eq!(commands::get_app_phase(), "P1.3");
+    fn app_phase_is_p1_4() {
+        assert_eq!(commands::get_app_phase(), "P1.4");
     }
 }

@@ -15,8 +15,11 @@ Match → Round → Timeline → Incident list → Incident evidence
 Requires only local offline analysis. Does **not** require CS2, NetCon, Windows
 capture, OpenAI, or AI-generated coaching.
 
-Out of scope: R004+, Click-to-CS2, automatic seek, POV, keyframe planning,
+Out of scope for this doc: R004+, automatic POV, keyframe planning,
 AI explanation UI, video export, longitudinal coaching.
+
+Click-to-CS2 is delivered separately as **P1.4** — see
+`docs/spikes/replay/P1_4_CLICK_TO_CS2.md`.
 
 ## Authoritative boundary
 
@@ -103,12 +106,12 @@ round outcome / thresholds version when present in engine metrics/evidence.
 
 Human-readable times use `match.tick_rate` when present. No hard-coded 64 Hz.
 
-## Future hooks (not implemented here)
+## Future hooks
 
-| Hook | Preserved fields |
+| Hook | Status |
 | --- | --- |
-| View in CS2 | `incident_id`, `start_demo_tick`, `anchor_demo_tick`, `end_demo_tick` |
-| AI panel | incident remains valid without AI; later attaches to selected incident |
+| View in CS2 | Implemented in P1.4 via `view_incident_in_cs2(match_id, incident_id)` — UI does not compute ticks |
+| AI panel | Not implemented; incident remains valid without AI |
 
 ## Private smoke
 

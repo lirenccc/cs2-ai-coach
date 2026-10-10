@@ -86,6 +86,7 @@ pub struct ReplaySession {
     reconnect_attempts: u32,
     last_error: Option<Cs2Error>,
     staged: Option<StagedDemo>,
+    loaded_demo_sha: Option<String>,
 }
 
 impl ReplaySession {
@@ -99,11 +100,20 @@ impl ReplaySession {
             reconnect_attempts: 0,
             last_error: None,
             staged: None,
+            loaded_demo_sha: None,
         }
     }
 
     pub fn state(&self) -> ReplaySessionState {
         self.state
+    }
+
+    pub fn loaded_demo_sha(&self) -> Option<&str> {
+        self.loaded_demo_sha.as_deref()
+    }
+
+    pub fn set_loaded_demo_sha(&mut self, sha: Option<String>) {
+        self.loaded_demo_sha = sha;
     }
 
     pub fn last_error(&self) -> Option<&Cs2Error> {
@@ -278,6 +288,7 @@ impl ReplaySession {
         })?;
         let resp = self.send_command(&cmd)?;
         self.staged = Some(staged.clone());
+        self.loaded_demo_sha = Some(staged.sha256.clone());
         self.transition(ReplaySessionState::DemoReady)?;
         Ok((staged, resp))
     }
@@ -378,6 +389,7 @@ impl ReplaySession {
         self.launch_plan = None;
         self.reconnect_attempts = 0;
         self.staged = None;
+        self.loaded_demo_sha = None;
         self.state = ReplaySessionState::NotRunning;
     }
 
@@ -430,6 +442,10 @@ impl ReplaySessionManager {
             inner: None,
             staging_root: staging_root.into(),
         }
+    }
+
+    pub fn staging_root(&self) -> &Path {
+        &self.staging_root
     }
 
     pub fn session_mut(&mut self) -> &mut ReplaySession {
@@ -496,5 +512,17 @@ mod tests {
         session.close();
         assert_eq!(session.state(), ReplaySessionState::NotRunning);
         assert!(session.client.is_none());
+    }
+
+    #[test]
+    fn loaded_demo_sha_supports_idempotent_reload_skip() {
+        let mut session = ReplaySession::new(std::env::temp_dir().join("cs2coach-session-sha"));
+        assert!(session.loaded_demo_sha().is_none());
+        session.set_loaded_demo_sha(Some("ab".repeat(32)));
+        assert_eq!(session.loaded_demo_sha(), Some("ab".repeat(32).as_str()));
+        // Same SHA ⇒ coordinator may reseek without restaging.
+        assert_eq!(session.loaded_demo_sha(), Some("ab".repeat(32).as_str()));
+        session.close();
+        assert!(session.loaded_demo_sha().is_none());
     }
 }
