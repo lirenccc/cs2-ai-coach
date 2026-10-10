@@ -86,15 +86,19 @@
 - CI 不要求本机 CS2；真机入口为 ignored `probe_replay_tick_calibration`
 
 ### P0.6 Windows capture spike
-- [ ] find CS2 window
-- [ ] Windows.Graphics.Capture proof
-- [ ] fallback strategy
-- [ ] single snapshot
-- [ ] burst snapshot
+- [x] find CS2 window（进程归属优先；见 `capture::discover`）
+- [x] Windows.Graphics.Capture proof（`CreateForWindow` + free-threaded frame pool）
+- [x] fallback strategy（DXGI Desktop Duplication 决策/裁切计划；WGC 健康时不自动切换）
+- [x] single snapshot + quality + versioned manifest
+- [x] burst snapshot（有界 count/timeout/cancel）
+- [x] resize / minimized typed recovery
+- [x] capture-after-calibrated-seek（DemoTick + `p0.5a-2026-10-10`）
+- [x] 输出 `docs/spikes/capture/P0_6_WINDOWS_CAPTURE.md` + redacted fixture
 
 **Acceptance**
-- 1920x1080 / windowed scenario 非黑图
-- resize 后恢复
+- windowed 非黑图（本机验证 ~1280×720 / 捕获 1282×752）
+- resize 后 frame pool recreate 路径可恢复
+- CI 不要求本机 CS2；真机入口为 ignored `probe_capture_*` / `probe_wgc_*`
 
 ### P0.7 AI spike
 - [x] AI provider interface

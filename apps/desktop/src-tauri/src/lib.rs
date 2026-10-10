@@ -34,7 +34,10 @@ pub fn run() {
             commands::desktop_health,
             commands::analyzer_health,
             commands::sidecar_status,
-            commands::preview_replay_command
+            commands::preview_replay_command,
+            commands::capture_health,
+            commands::capture_cs2_snapshot,
+            commands::capture_cs2_burst
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
@@ -57,7 +60,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn app_phase_is_p0_5a() {
-        assert_eq!(commands::get_app_phase(), "P0.5A");
+    fn app_phase_is_p0_6() {
+        assert_eq!(commands::get_app_phase(), "P0.6");
     }
 }

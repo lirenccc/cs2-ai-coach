@@ -1,0 +1,50 @@
+{
+  "manifest_version": "p0.6-2026-10-10",
+  "capture_id": "cap-<redacted>",
+  "frame_id": "frame-0008",
+  "match_id": "9208210907649202700_0",
+  "event_id": "A04_post_halftime_explode",
+  "requested_demo_tick": 79639,
+  "server_tick_reference": 83418,
+  "replay_semantics_version": "p0.5a-2026-10-10",
+  "cs2_patch_version": "1.41.9.0",
+  "cs2_client_version": "2000930",
+  "steam_buildid": "25815307",
+  "capture_backend": "windows_graphics_capture",
+  "window_rect": {
+    "x": 0,
+    "y": 0,
+    "width": 1296,
+    "height": 759
+  },
+  "client_rect": {
+    "x": 0,
+    "y": 0,
+    "width": 1280,
+    "height": 720
+  },
+  "dpi_scale": 1.0,
+  "frame_width": 1282,
+  "frame_height": 752,
+  "pixel_format": "B8G8R8A8_UNORM",
+  "settle_policy": {
+    "fixed_duration": {
+      "ms": 2000
+    }
+  },
+  "settle_ms": 2000,
+  "captured_at_unix_ms": 0,
+  "content_sha256": "e0370b197addc71af40527b54cb2670748c9659971f3bed295e30723299824fa",
+  "quality": {
+    "valid": true,
+    "black_ratio": 0.2583708135559465,
+    "white_ratio": 0.0009501443887542736,
+    "variance": 4362.705238619983,
+    "exact_duplicate": false,
+    "duplicate_expected_while_paused": false,
+    "capture_backend_stuck": false,
+    "warnings": []
+  },
+  "storage_path_relative": "runtime/captures/<match-id>/<capture-id>/frame-0008.png",
+  "frame_pool_recreated": false
+}
