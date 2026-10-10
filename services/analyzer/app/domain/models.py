@@ -38,3 +38,112 @@ class ImportDemoResponse(BaseModel):
     round_count: int = 0
     kill_count: int = 0
     damage_count: int = 0
+
+
+class MatchReviewMatch(BaseModel):
+    match_id: str
+    map_name: str | None = None
+    parse_status: str
+    tick_rate: float | None = None
+    parser_name: str | None = None
+    parser_version: str | None = None
+    round_count: int = 0
+    kill_count: int = 0
+    roster_count: int = 0
+
+
+class MatchReviewPlayer(BaseModel):
+    player_identity_id: str
+    display_name: str | None = None
+    is_bot: bool = False
+
+
+class MatchReviewRound(BaseModel):
+    round_id: str
+    round_number: int
+    start_demo_tick: int | None = None
+    freeze_end_demo_tick: int | None = None
+    end_demo_tick: int | None = None
+    winner_side: str | None = None
+    round_end_reason: str | None = None
+
+
+class MatchReviewTimelineEvent(BaseModel):
+    event_id: str
+    event_type: str
+    demo_tick: int
+    round_id: str
+    round_number: int
+    player_identity_id: str | None = None
+    side: str | None = None
+    fields: dict = Field(default_factory=dict)
+
+
+class MatchReviewEvidence(BaseModel):
+    evidence_id: str
+    kind: str
+    label: str
+    demo_tick: int | None = None
+    ref: str | None = None
+    name: str | None = None
+    value: object | None = None
+    unit: str | None = None
+    certainty: str | None = None
+
+
+class MatchReviewIncident(BaseModel):
+    incident_id: str
+    rule_id: str
+    rule_version: str
+    incident_type: str
+    round_id: str
+    round_number: int
+    focus_player_id: str | None = None
+    focus_side: str | None = None
+    start_demo_tick: int
+    anchor_demo_tick: int
+    end_demo_tick: int
+    severity: int
+    confidence: float
+    metrics: dict = Field(default_factory=dict)
+    evidence: list[MatchReviewEvidence] = Field(default_factory=list)
+    status: str = "candidate"
+    thresholds_version: str | None = None
+    capture_hint: dict = Field(default_factory=dict)
+
+
+class AnalysisCoverageReason(BaseModel):
+    reason_code: str
+    count: int
+
+
+class AnalysisCoverageRule(BaseModel):
+    rule_id: str
+    rule_version: str
+    matched: int
+    unresolved: int
+    outcome: str
+    unresolved_reasons: list[AnalysisCoverageReason] = Field(default_factory=list)
+
+
+class MatchReviewUnresolved(BaseModel):
+    rule_id: str
+    round_id: str
+    round_number: int
+    subject: str
+    reason: str
+    reason_code: str
+    certainty: str = "unresolved"
+
+
+class MatchReviewResponse(BaseModel):
+    schema_version: str
+    rule_engine_contract_version: str
+    thresholds_version: str
+    match: MatchReviewMatch
+    players: list[MatchReviewPlayer]
+    rounds: list[MatchReviewRound]
+    timeline_events: list[MatchReviewTimelineEvent]
+    incidents: list[MatchReviewIncident]
+    analysis_coverage: list[AnalysisCoverageRule]
+    unresolved_evaluations: list[MatchReviewUnresolved]

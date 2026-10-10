@@ -34,6 +34,8 @@ pub fn run() {
             commands::desktop_health,
             commands::analyzer_health,
             commands::sidecar_status,
+            commands::import_demo,
+            commands::get_match_review,
             commands::preview_replay_command,
             commands::capture_health,
             commands::capture_cs2_snapshot,
@@ -60,7 +62,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn app_phase_is_p0_6a() {
-        assert_eq!(commands::get_app_phase(), "P0.6A");
+    fn app_phase_is_p1_3() {
+        assert_eq!(commands::get_app_phase(), "P1.3");
     }
 }

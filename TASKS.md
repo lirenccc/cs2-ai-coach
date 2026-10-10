@@ -152,11 +152,17 @@
 - [x] raw tick preserved（probe 同时保留 demo tick 与 server tick；storage 双时钟列）
 
 ### P1.3 Timeline
-- [ ] match page
-- [ ] round list
-- [ ] kill/death timeline
-- [ ] player selector
-- [ ] event detail drawer
+- [x] match page（Match Review 离线复盘屏）
+- [x] round list + all-rounds 导航
+- [x] kill/death timeline（规范化事件 + incident anchors；same-tick 分组）
+- [x] player selector（`player_identity_id` 键；display name 仅展示）
+- [x] event / incident evidence drawer
+- [x] `GET /v1/matches/{match_id}/review` + Tauri `get_match_review` / `import_demo`
+- [x] shared `MatchReview` 合同（`packages/contracts`）
+- [x] analysis coverage / UNRESOLVED 与 Incident 列表分离
+- [x] CI-safe synthetic fixtures + UI/API 单测
+- [x] 文档：`docs/spikes/review/MATCH_REVIEW_V1.md`
+- [ ] dense tick / Parquet timeline visualization（后续）
 
 ### P1.4 Rule Engine v1
 - [x] Rule interface + `IncidentCandidate` / `RuleEvidence` / `MATCHED|NOT_MATCHED|UNRESOLVED`
@@ -170,9 +176,9 @@
 - [ ] unsupported entry candidate
 
 ### P1.5 Incident UI
-- [ ] evidence list
-- [ ] severity/confidence separate
-- [ ] filter/sort
+- [x] evidence list（结构化 RuleEvidence；可检查 evidence_id）
+- [x] severity/confidence separate（不合并为单一 score）
+- [x] filter/sort（round / player / rule / side / severity；稳定排序）
 - [ ] mark useful/not useful
 
 **P1 Exit**

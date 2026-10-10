@@ -1,9 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import { asBridgeError, formatBridgeError } from "./bridgeError";
-import { getAnalyzerHealth, getDesktopHealth } from "./native";
+import {
+  getAnalyzerHealth,
+  getDesktopHealth,
+  getMatchReview,
+  importDemo,
+} from "./native";
+import { MatchReviewPage } from "./review/MatchReviewPage";
 import { analyzerPill } from "./status";
-import type { AnalyzerHealth, BridgeError, DesktopHealth } from "./types";
+import type {
+  AnalyzerHealth,
+  BridgeError,
+  DesktopHealth,
+  MatchReview,
+} from "./types";
 
 type State<T> =
   | { kind: "loading" }
@@ -21,6 +32,10 @@ export default function App() {
   const [analyzer, setAnalyzer] = useState<State<AnalyzerHealth>>({
     kind: "loading",
   });
+  const [demoPath, setDemoPath] = useState("");
+  const [matchId, setMatchId] = useState("");
+  const [review, setReview] = useState<State<MatchReview> | null>(null);
+  const [busy, setBusy] = useState(false);
 
   async function refresh() {
     setDesktop({ kind: "loading" });
@@ -72,18 +87,65 @@ export default function App() {
     analyzer.kind === "ready" ? analyzer.value.status : undefined,
   );
 
+  async function onImport() {
+    if (!demoPath.trim()) return;
+    setBusy(true);
+    setReview({ kind: "loading" });
+    try {
+      const imported = await importDemo(demoPath.trim());
+      setMatchId(imported.match_id);
+      const payload = await getMatchReview(imported.match_id);
+      setReview({ kind: "ready", value: payload });
+    } catch (error) {
+      setReview({ kind: "error", error: asBridgeError(error) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onOpenReview() {
+    if (!matchId.trim()) return;
+    setBusy(true);
+    setReview({ kind: "loading" });
+    try {
+      const payload = await getMatchReview(matchId.trim());
+      setReview({ kind: "ready", value: payload });
+    } catch (error) {
+      setReview({ kind: "error", error: asBridgeError(error) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (review?.kind === "ready") {
+    return (
+      <main className="shell wide">
+        <MatchReviewPage
+          review={review.value}
+          onBack={() => setReview(null)}
+        />
+        <footer>
+          Offline demo review only · No injection · No process-memory access · No
+          live competitive assistance
+        </footer>
+      </main>
+    );
+  }
+
   return (
     <main className="shell">
       <header className="hero">
         <div>
-          <div className="eyebrow">CS2 AI COACH · v0.1</div>
+          <div className="eyebrow">CS2 AI COACH · P1.3</div>
           <h1>Demo review, grounded in evidence.</h1>
           <p>
-            当前骨架先验证解析、回放、捕捉和 AI 四条技术链路；不会把未验证的
-            CS2 集成伪装成完成状态。
+            打开已解析比赛的 Match Review：回合 / 时间线 / 确定性 Incident /
+            结构化证据。不需要 CS2、NetCon、截图或 AI。
           </p>
         </div>
-        <button onClick={() => void refresh()}>刷新状态</button>
+        <button type="button" onClick={() => void refresh()}>
+          刷新状态
+        </button>
       </header>
 
       <section className="grid">
@@ -139,27 +201,60 @@ export default function App() {
         </article>
       </section>
 
-      <section className="card workflow">
-        <div className="eyebrow">IMPLEMENTATION ORDER</div>
-        <h2>先证明四条链路，再做产品 UI</h2>
-        <ol>
-          <li>
-            <strong>Demo Parser</strong>
-            <span>真实 .dem → normalized facts</span>
-          </li>
-          <li>
-            <strong>NetCon</strong>
-            <span>外部连接 CS2 → load / pause / seek</span>
-          </li>
-          <li>
-            <strong>Capture</strong>
-            <span>CS2 window → verified keyframes</span>
-          </li>
-          <li>
-            <strong>AI</strong>
-            <span>facts + frames → structured coaching</span>
-          </li>
-        </ol>
+      <section className="card reviewOpen" aria-label="Open match review">
+        <div className="eyebrow">MATCH REVIEW</div>
+        <h2>打开离线复盘</h2>
+        <p className="muted">
+          通过 Tauri 桥调用 analyzer；renderer 不会拿到 sidecar token 或随机端口。
+        </p>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void onImport();
+          }}
+        >
+          <label>
+            Demo path
+            <input
+              aria-label="Demo path"
+              value={demoPath}
+              onChange={(event) => setDemoPath(event.target.value)}
+              placeholder="C:\demos\match.dem"
+            />
+          </label>
+          <button type="submit" disabled={busy || !demoPath.trim()}>
+            Import & review
+          </button>
+        </form>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void onOpenReview();
+          }}
+        >
+          <label>
+            Match id
+            <input
+              aria-label="Match id"
+              value={matchId}
+              onChange={(event) => setMatchId(event.target.value)}
+              placeholder="uuid from import"
+            />
+          </label>
+          <button type="submit" disabled={busy || !matchId.trim()}>
+            Open review
+          </button>
+        </form>
+        {review?.kind === "loading" ? (
+          <p className="muted" role="status">
+            Loading match review…
+          </p>
+        ) : null}
+        {review?.kind === "error" ? (
+          <p className="muted" role="alert">
+            {formatBridgeError(review.error)}
+          </p>
+        ) : null}
       </section>
 
       <footer>

@@ -14,8 +14,12 @@ R002 Untraded Death
 R003 Advantage Loss Candidate  (ADVANTAGE_LOSS_CANDIDATE)
 ```
 
-Out of scope: Isolated Contact, Repeat Peek, Timeline/Incident UI, click-to-CS2,
-production AI orchestration, AI-based rule decisions.
+Out of scope for the rule-engine milestone: Isolated Contact, Repeat Peek,
+click-to-CS2, production AI orchestration, AI-based rule decisions.
+
+Timeline/Incident UI is delivered separately as Match Review v1
+(`docs/spikes/review/MATCH_REVIEW_V1.md`) and consumes these rule outputs
+read-only.
 
 ## VERIFIED
 

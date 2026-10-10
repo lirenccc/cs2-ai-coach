@@ -90,6 +90,9 @@ Isolated Contact / Repeat Peek / Unsupported Entry 等仍属后续候选，尚�
 阈值版本：`rule-thresholds-v1-2026-10-10`（见 `RuleThresholds`）。  
 补充说明：`docs/spikes/rules/RULE_ENGINE_V1.md`。
 
+离线 UI 投影：`GET /v1/matches/{match_id}/review`（`MatchReviewService`）。  
+前端只渲染权威输出，不在 TypeScript 中重算规则。见 `docs/spikes/review/MATCH_REVIEW_V1.md`。
+
 ### 权威数据源（规则层）
 
 | 状态 | 权威源 | 禁止 |

@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   CONTRACTS_SCHEMA_VERSION,
+  MATCH_REVIEW_SCHEMA_VERSION,
   type AnalyzerHealth,
   type BootstrapInfo,
   type BridgeError,
   type ControllerSession,
   type ImportDemoResponse,
+  type MatchReview,
   type PawnLife,
   type PlayerIdentity,
 } from "./index";
@@ -75,5 +77,105 @@ describe("contracts bootstrap", () => {
     };
     expect(session.playerIdentityId).toBe(identity.id);
     expect(life.controllerSessionId).toBe(session.id);
+  });
+
+  it("types the match review projection without sidecar secrets", () => {
+    const review: MatchReview = {
+      schema_version: MATCH_REVIEW_SCHEMA_VERSION,
+      rule_engine_contract_version: "rule-engine-v1-2026-10-10",
+      thresholds_version: "rule-thresholds-v1-2026-10-10",
+      match: {
+        match_id: "match-1",
+        map_name: "de_dust2",
+        parse_status: "completed",
+        tick_rate: 128,
+        round_count: 2,
+        kill_count: 4,
+        roster_count: 10,
+      },
+      players: [
+        {
+          player_identity_id: "pid_ct1",
+          display_name: "Player_A",
+          is_bot: false,
+        },
+      ],
+      rounds: [
+        {
+          round_id: "r1",
+          round_number: 1,
+          freeze_end_demo_tick: 100,
+          end_demo_tick: 500,
+          winner_side: "t",
+        },
+      ],
+      timeline_events: [
+        {
+          event_id: "kill:1",
+          event_type: "player_death",
+          demo_tick: 200,
+          round_id: "r1",
+          round_number: 1,
+          player_identity_id: "pid_ct1",
+          side: "ct",
+          fields: {},
+        },
+      ],
+      incidents: [
+        {
+          incident_id: "inc_1",
+          rule_id: "R003",
+          rule_version: "1.0.0",
+          incident_type: "ADVANTAGE_LOSS_CANDIDATE",
+          round_id: "r1",
+          round_number: 1,
+          focus_side: "ct",
+          start_demo_tick: 300,
+          anchor_demo_tick: 500,
+          end_demo_tick: 500,
+          severity: 3,
+          confidence: 1,
+          metrics: { peak_advantage: 2 },
+          evidence: [
+            {
+              evidence_id: "ev_1",
+              kind: "metric",
+              label: "peak advantage",
+              name: "peak_advantage",
+              value: 2,
+            },
+          ],
+          status: "candidate",
+          thresholds_version: "rule-thresholds-v1-2026-10-10",
+        },
+      ],
+      analysis_coverage: [
+        {
+          rule_id: "R001",
+          rule_version: "1.0.0",
+          matched: 1,
+          unresolved: 1,
+          outcome: "matched",
+          unresolved_reasons: [
+            { reason_code: "TAKEOVER_ATTRIBUTION_UNRESOLVED", count: 1 },
+          ],
+        },
+      ],
+      unresolved_evaluations: [
+        {
+          rule_id: "R001",
+          round_id: "r3",
+          round_number: 3,
+          subject: "pid_ct1",
+          reason: "opening_death_crosses_unresolved_takeover",
+          reason_code: "TAKEOVER_ATTRIBUTION_UNRESOLVED",
+          certainty: "unresolved",
+        },
+      ],
+    };
+    expect(review.schema_version).toBe("1.0.0");
+    expect(review.incidents[0]?.incident_type).toBe("ADVANTAGE_LOSS_CANDIDATE");
+    expect(review.match).not.toHaveProperty("original_path");
+    expect(review).not.toHaveProperty("session_token");
   });
 });

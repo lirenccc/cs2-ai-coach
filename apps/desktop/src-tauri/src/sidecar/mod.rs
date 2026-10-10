@@ -6,7 +6,9 @@ mod manager;
 pub use manager::{SidecarManager, SidecarStatus};
 
 use reqwest::header::{HeaderMap, HeaderValue};
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
+use serde_json::Value as JsonValue;
 use std::time::Duration;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -115,16 +117,22 @@ async fn authorized_client(token: &str, timeout: Duration) -> Result<reqwest::Cl
         .map_err(|e| BridgeError::new("SIDECAR_CONFIG", e.to_string(), false))
 }
 
-pub async fn health_at(endpoint: &SessionEndpoint) -> Result<AnalyzerHealth, BridgeError> {
-    endpoint.ensure_loopback()?;
-    let client = authorized_client(&endpoint.token, Duration::from_secs(2)).await?;
-    let url = format!("{}/v1/health", endpoint.base_url());
-    let response = client
-        .get(url)
-        .send()
-        .await
-        .map_err(map_reqwest_error)?;
+#[derive(Debug, Deserialize)]
+struct AnalyzerErrorBody {
+    error: AnalyzerErrorFields,
+}
 
+#[derive(Debug, Deserialize)]
+struct AnalyzerErrorFields {
+    code: String,
+    message: String,
+    #[serde(default)]
+    retryable: bool,
+}
+
+async fn decode_json_response<T: DeserializeOwned>(
+    response: reqwest::Response,
+) -> Result<T, BridgeError> {
     let status = response.status();
     if status.as_u16() == 401 {
         return Err(BridgeError::new(
@@ -133,18 +141,65 @@ pub async fn health_at(endpoint: &SessionEndpoint) -> Result<AnalyzerHealth, Bri
             false,
         ));
     }
+    let bytes = response
+        .bytes()
+        .await
+        .map_err(|e| BridgeError::new("SIDECAR_REQUEST_FAILED", e.to_string(), true))?;
     if !status.is_success() {
+        if let Ok(envelope) = serde_json::from_slice::<AnalyzerErrorBody>(&bytes) {
+            return Err(BridgeError::new(
+                &envelope.error.code,
+                envelope.error.message,
+                envelope.error.retryable,
+            ));
+        }
         return Err(BridgeError::new(
             "SIDECAR_REQUEST_FAILED",
-            format!("analyzer health returned HTTP {status}"),
+            format!("analyzer returned HTTP {status}"),
             true,
         ));
     }
+    serde_json::from_slice::<T>(&bytes).map_err(|e| {
+        BridgeError::new(
+            "SIDECAR_MALFORMED_RESPONSE",
+            format!("analyzer response failed schema decode: {e}"),
+            true,
+        )
+    })
+}
 
-    response
-        .json::<AnalyzerHealth>()
+pub async fn get_json_at<T: DeserializeOwned>(
+    endpoint: &SessionEndpoint,
+    path: &str,
+    timeout: Duration,
+) -> Result<T, BridgeError> {
+    endpoint.ensure_loopback()?;
+    let client = authorized_client(&endpoint.token, timeout).await?;
+    let url = format!("{}{}", endpoint.base_url(), path);
+    let response = client.get(url).send().await.map_err(map_reqwest_error)?;
+    decode_json_response(response).await
+}
+
+pub async fn post_json_at<T: DeserializeOwned, B: Serialize>(
+    endpoint: &SessionEndpoint,
+    path: &str,
+    body: &B,
+    timeout: Duration,
+) -> Result<T, BridgeError> {
+    endpoint.ensure_loopback()?;
+    let client = authorized_client(&endpoint.token, timeout).await?;
+    let url = format!("{}{}", endpoint.base_url(), path);
+    let response = client
+        .post(url)
+        .json(body)
+        .send()
         .await
-        .map_err(|e| BridgeError::new("SIDECAR_REQUEST_FAILED", e.to_string(), true))
+        .map_err(map_reqwest_error)?;
+    decode_json_response(response).await
+}
+
+pub async fn health_at(endpoint: &SessionEndpoint) -> Result<AnalyzerHealth, BridgeError> {
+    get_json_at(endpoint, "/v1/health", Duration::from_secs(2)).await
 }
 
 pub async fn request_shutdown(endpoint: &SessionEndpoint) -> Result<(), BridgeError> {
@@ -156,22 +211,46 @@ pub async fn request_shutdown(endpoint: &SessionEndpoint) -> Result<(), BridgeEr
         .send()
         .await
         .map_err(map_reqwest_error)?;
+    let _: JsonValue = decode_json_response(response).await?;
+    Ok(())
+}
 
-    if response.status().as_u16() == 401 {
+fn validate_match_id(match_id: &str) -> Result<(), BridgeError> {
+    if match_id.is_empty() || match_id.contains('/') || match_id.contains('\\') {
         return Err(BridgeError::new(
-            "SIDECAR_UNAUTHORIZED",
-            "analyzer rejected the session token",
+            "MATCH_ID_INVALID",
+            "match_id must be a non-empty opaque id",
             false,
         ));
     }
-    if !response.status().is_success() {
-        return Err(BridgeError::new(
-            "SIDECAR_REQUEST_FAILED",
-            format!("analyzer shutdown returned HTTP {}", response.status()),
-            true,
-        ));
-    }
     Ok(())
+}
+
+pub async fn get_match_review_at(
+    endpoint: &SessionEndpoint,
+    match_id: &str,
+) -> Result<JsonValue, BridgeError> {
+    validate_match_id(match_id)?;
+    let path = format!("/v1/matches/{match_id}/review");
+    get_json_at(endpoint, &path, Duration::from_secs(60)).await
+}
+
+#[derive(Debug, Serialize)]
+struct ImportDemoBody<'a> {
+    path: &'a str,
+}
+
+pub async fn import_demo_at(
+    endpoint: &SessionEndpoint,
+    path: &str,
+) -> Result<JsonValue, BridgeError> {
+    post_json_at(
+        endpoint,
+        "/v1/demos/import",
+        &ImportDemoBody { path },
+        Duration::from_secs(180),
+    )
+    .await
 }
 
 #[cfg(test)]
@@ -205,5 +284,13 @@ mod tests {
         );
         assert!(err.retryable);
         assert_eq!(err.code, "SIDECAR_REQUEST_TIMEOUT");
+    }
+
+    #[test]
+    fn match_id_validation_rejects_traversal_and_omits_token() {
+        let err = validate_match_id("../secret").unwrap_err();
+        assert_eq!(err.code, "MATCH_ID_INVALID");
+        assert!(!err.message.contains("secret"));
+        assert!(validate_match_id("match-abc").is_ok());
     }
 }

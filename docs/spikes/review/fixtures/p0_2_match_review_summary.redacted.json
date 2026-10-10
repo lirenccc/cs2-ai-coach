@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "rule_engine_contract_version": "rule-engine-v1-2026-10-10",
+  "thresholds_version": "rule-thresholds-v1-2026-10-10",
+  "fixture_sha256": "d873502ed8a1df0cd0f919568261e14b92a04e1ca44cd60e84dcec64748a01ec",
+  "round_count": 18,
+  "timeline_event_count": 269,
+  "incident_counts": {
+    "R001": 14,
+    "R002": 87,
+    "R003": 5
+  },
+  "unresolved_counts": {
+    "R001": 4,
+    "R002": 27,
+    "R003": 0
+  },
+  "notes": [
+    "Redacted summary only \u2014 no Steam IDs, player names, or demo paths.",
+    "Private review payload is not committed."
+  ]
+}

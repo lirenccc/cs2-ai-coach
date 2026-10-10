@@ -13,12 +13,14 @@ from .domain.models import (
     HealthResponse,
     ImportDemoRequest,
     ImportDemoResponse,
+    MatchReviewResponse,
     ParserHealth,
     ShutdownResponse,
 )
 from .errors import AppError
 from .security import make_token_verifier
 from .services.import_demo import ImportDemoService
+from .services.match_review import MatchNotFoundError, MatchReviewService
 from .storage.db import Database
 from .storage.demo_repository import DemoRepository
 from .storage.event_repository import EventRepository
@@ -57,6 +59,7 @@ def create_app(
         extract_root=Path(settings.extract_root),
         persist_parsed=persist_parsed,
     )
+    review_service = MatchReviewService(match_repo)
     verify = make_token_verifier(settings)
 
     app = FastAPI(
@@ -68,8 +71,9 @@ def create_app(
 
     @app.exception_handler(AppError)
     async def app_error_handler(_request: Request, exc: AppError):
+        status = 404 if isinstance(exc, MatchNotFoundError) else 400
         return JSONResponse(
-            status_code=400,
+            status_code=status,
             content={
                 "error": {
                     "code": exc.code,
@@ -125,6 +129,15 @@ def create_app(
             kill_count=match.kill_count,
             damage_count=match.damage_count,
         )
+
+    @app.get(
+        "/v1/matches/{match_id}/review",
+        response_model=MatchReviewResponse,
+        dependencies=[Depends(verify)],
+    )
+    async def get_match_review(match_id: str) -> MatchReviewResponse:
+        payload = review_service.get_review(match_id)
+        return MatchReviewResponse.model_validate(payload)
 
     return app
 

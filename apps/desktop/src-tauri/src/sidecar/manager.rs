@@ -1,6 +1,10 @@
 //! Owns analyzer process lifecycle: random loopback port, session token, spawn/stop.
 
-use super::{health_at, request_shutdown, AnalyzerHealth, BridgeError, SessionEndpoint};
+use super::{
+    get_match_review_at, health_at, import_demo_at, request_shutdown, AnalyzerHealth, BridgeError,
+    SessionEndpoint,
+};
+use serde_json::Value as JsonValue;
 use rand::RngCore;
 use serde::Serialize;
 use std::net::TcpListener;
@@ -79,41 +83,44 @@ impl SidecarManager {
         }
     }
 
-    pub async fn health(&self) -> Result<AnalyzerHealth, BridgeError> {
+    fn ready_endpoint_locked(guard: &mut ManagerInner) -> Result<SessionEndpoint, BridgeError> {
+        Self::refresh_locked(guard);
+        match &*guard {
+            ManagerInner::Live(live) if live.status == SidecarStatus::Ready => {
+                Ok(live.endpoint.clone())
+            }
+            ManagerInner::Live(live) if live.status == SidecarStatus::Crashed => {
+                Err(BridgeError::new(
+                    "SIDECAR_CRASHED",
+                    "analyzer sidecar process exited unexpectedly",
+                    true,
+                ))
+            }
+            ManagerInner::Failed { error, .. } => Err(error.clone()),
+            ManagerInner::Stopped => Err(BridgeError::new(
+                "SIDECAR_NOT_READY",
+                "analyzer sidecar is stopped",
+                true,
+            )),
+            ManagerInner::Live(_) => Err(BridgeError::new(
+                "SIDECAR_NOT_READY",
+                "analyzer sidecar is not ready",
+                true,
+            )),
+        }
+    }
+
+    async fn with_ready_endpoint<T, F, Fut>(&self, op: F) -> Result<T, BridgeError>
+    where
+        F: FnOnce(SessionEndpoint) -> Fut,
+        Fut: std::future::Future<Output = Result<T, BridgeError>>,
+    {
         let endpoint = {
             let mut guard = self.inner.lock().expect("sidecar mutex");
-            Self::refresh_locked(&mut guard);
-            match &*guard {
-                ManagerInner::Live(live) if live.status == SidecarStatus::Ready => {
-                    live.endpoint.clone()
-                }
-                ManagerInner::Live(live) if live.status == SidecarStatus::Crashed => {
-                    return Err(BridgeError::new(
-                        "SIDECAR_CRASHED",
-                        "analyzer sidecar process exited unexpectedly",
-                        true,
-                    ));
-                }
-                ManagerInner::Failed { error, .. } => return Err(error.clone()),
-                ManagerInner::Stopped => {
-                    return Err(BridgeError::new(
-                        "SIDECAR_NOT_READY",
-                        "analyzer sidecar is stopped",
-                        true,
-                    ));
-                }
-                ManagerInner::Live(_) => {
-                    return Err(BridgeError::new(
-                        "SIDECAR_NOT_READY",
-                        "analyzer sidecar is not ready",
-                        true,
-                    ));
-                }
-            }
+            Self::ready_endpoint_locked(&mut guard)?
         };
-
-        match health_at(&endpoint).await {
-            Ok(health) => Ok(health),
+        match op(endpoint).await {
+            Ok(value) => Ok(value),
             Err(err) => {
                 let mut guard = self.inner.lock().expect("sidecar mutex");
                 Self::refresh_locked(&mut guard);
@@ -131,6 +138,23 @@ impl SidecarManager {
                 }
             }
         }
+    }
+
+    pub async fn health(&self) -> Result<AnalyzerHealth, BridgeError> {
+        self.with_ready_endpoint(|endpoint| async move { health_at(&endpoint).await })
+            .await
+    }
+
+    pub async fn get_match_review(&self, match_id: String) -> Result<JsonValue, BridgeError> {
+        self.with_ready_endpoint(move |endpoint| async move {
+            get_match_review_at(&endpoint, &match_id).await
+        })
+        .await
+    }
+
+    pub async fn import_demo(&self, path: String) -> Result<JsonValue, BridgeError> {
+        self.with_ready_endpoint(move |endpoint| async move { import_demo_at(&endpoint, &path).await })
+            .await
     }
 
     pub async fn stop(&self) {

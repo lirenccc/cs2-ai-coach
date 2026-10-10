@@ -43,6 +43,12 @@ function remediationFor(code: string): string | undefined {
       return "Wait for the sidecar to finish starting, then refresh.";
     case "SIDECAR_REQUEST_TIMEOUT":
       return "Retry; the analyzer may be busy.";
+    case "MATCH_NOT_FOUND":
+      return "Import the demo first, then open review with the returned match_id.";
+    case "MATCH_NOT_PARSED":
+      return "Re-import the demo; review requires a completed parse.";
+    case "SIDECAR_MALFORMED_RESPONSE":
+      return "Restart the app; if it persists, file a bug with the analyzer version.";
     default:
       return undefined;
   }

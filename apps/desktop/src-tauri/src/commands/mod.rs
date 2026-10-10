@@ -69,6 +69,24 @@ pub fn sidecar_status(state: State<'_, SidecarManager>) -> SidecarStatus {
     state.status()
 }
 
+/// Import a local demo via the analyzer sidecar. Renderer never sees the session token.
+#[tauri::command]
+pub async fn import_demo(
+    state: State<'_, SidecarManager>,
+    path: String,
+) -> Result<serde_json::Value, BridgeError> {
+    state.import_demo(path).await
+}
+
+/// Load the offline Match Review projection for a parsed match.
+#[tauri::command]
+pub async fn get_match_review(
+    state: State<'_, SidecarManager>,
+    match_id: String,
+) -> Result<serde_json::Value, BridgeError> {
+    state.get_match_review(match_id).await
+}
+
 #[tauri::command]
 pub fn preview_replay_command(kind: String, value: Option<String>) -> Result<String, String> {
     let cmd = match kind.as_str() {

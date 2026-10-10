@@ -225,17 +225,28 @@ Response：
 }
 ```
 
+### Match Review (P1.3)
+
+`GET /v1/matches/{match_id}/review`
+
+Bounded offline review projection: match summary, players, rounds, timeline
+events, deterministic incidents (R001–R003), analysis coverage, and unresolved
+evaluations. Built from persisted `parsed_json` + Rule Engine — no CS2 / capture /
+AI. See `docs/spikes/review/MATCH_REVIEW_V1.md`.
+
+Response must not include absolute demo paths or session tokens.
+
 ### Match
 
-`GET /v1/matches/{match_id}`
+`GET /v1/matches/{match_id}` *(planned finer-grained alternative; review covers P1.3)*
 
 ### Rounds
 
-`GET /v1/matches/{match_id}/rounds`
+`GET /v1/matches/{match_id}/rounds` *(planned; included inside review)*
 
 ### Incidents
 
-`GET /v1/matches/{match_id}/incidents?player_id=...`
+`GET /v1/matches/{match_id}/incidents?player_id=...` *(planned; included inside review)*
 
 ### Run rules
 
@@ -247,6 +258,8 @@ Response：
   "ruleset": "default"
 }
 ```
+
+*(P1.3 review evaluates rules on read from parsed payload; dedicated analyze job remains future work.)*
 
 ### Register captured frame
 
@@ -295,7 +308,8 @@ Renderer 不解析 Python exception 字符串。
 React 只调用 typed commands，例如：
 
 ```text
-import_demo(path)
+import_demo(path)           # implemented
+get_match_review(match_id)  # implemented (P1.3)
 get_match(match_id)
 get_rounds(match_id)
 get_incidents(match_id, player_id)
